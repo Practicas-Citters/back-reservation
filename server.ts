@@ -4,21 +4,13 @@ const app = express();
 
 // Verbos HTTP
 
-app.get('/daniel', (req, res) => {
-    res.send('Hola Daniel')
-});
+app.use(express.json());
 
-app.post('/', (req, res) => {
-    res.send('Hello World! POST');
-});
+import { authRouter } from './src/infrastructure/routes/auth.routes.js';
+import { bookingRouter } from './src/infrastructure/routes/booking.routes.js';
 
-app.put('/', (req, res) => {
-    res.send('Hello World! PUT');
-});
-
-app.delete('/', (req, res) => {
-    res.send('Hello World!');
-});
+app.use('/api/auth', authRouter);
+app.use('/api/booking', bookingRouter)
 
 
 app.listen(4000, () => {
