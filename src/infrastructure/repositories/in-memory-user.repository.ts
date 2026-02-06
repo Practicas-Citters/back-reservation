@@ -2,6 +2,7 @@ import type { UserRepository } from '../../domain/repositories/user.domain.repos
 import { User, UserRole } from '../../domain/entities/user.entity.js'; // Assuming UserRole is needed for reconstruction if simpler storage is used, but here we store objects.
 
 export class InMemoryUserRepository implements UserRepository {
+
     private users: User[] = [];
 
     async create(user: User): Promise<User> {
