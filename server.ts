@@ -9,10 +9,12 @@ app.use(express.json());
 import { authRouter } from './src/infrastructure/routes/auth.routes.js';
 import { bookingRouter } from './src/infrastructure/routes/booking.routes.js';
 import { sportRouter } from './src/infrastructure/routes/sport.routes.js';
+import { paymentRouter } from './src/infrastructure/routes/payment.routes.js';
 
 app.use('/api/auth', authRouter);
 app.use('/api/booking', bookingRouter);
 app.use('/api/sport', sportRouter);
+app.use('/api/payments', paymentRouter);
 
 
 app.listen(4000, () => {

@@ -21,6 +21,7 @@ export class Payment {
         public status: PaymentStatus,
         public method: PaymentMethod,
         public transactionId: string | null,
+        public userId: string, // ID del usuario que realiza el pago
         public booking: Booking, // ID de la reserva asociada
         public createdAt: Date
     ) { }
