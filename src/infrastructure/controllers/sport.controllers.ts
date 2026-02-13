@@ -1,10 +1,10 @@
 import type { Request, Response } from 'express';
 import { CreateSportUseCase } from '../../application/useCase/sports/create-sport.use-case.js';
-import { GetSportsUseCase } from '../../application/useCase/sports/get-sports.use-case.js';
+import { GetSportsUseCase } from '../../application/useCase/sports/findAll-sports.use-case.js';
 
 export class SportController {
     constructor(
-        // @QUESTION: La IA me ha sugerido que ponga private readonly, pero no se porque
+        // @QUESTION: The IA has suggested me  IA me ha sugerido que ponga private readonly, pero no se porque
         private readonly createSportUseCase: CreateSportUseCase,
         private readonly getSportsUseCase: GetSportsUseCase,
     ) {

@@ -1,18 +1,18 @@
 import { Sport } from "../../../domain/entities/sport.entity.js";
 import type { SportRepository } from "../../../domain/repositories/sport.domain.repository.js";
 
-// Definimos un puerto para generar IDs (Hexagonal: puerto de salida)
+// Define a port to generate IDs (Hexagonal: output port)
 export interface IdGenerator {
     generate(): string;
 }
 
-// Definimos un puerto para el servicio de encriptación (Hexagonal: puerto de salida)
+// Define a port for the encryption service (Hexagonal: output port)
 export interface CreateSportDto {
     name: string;
     iconUrl: string;
     minPlayers: number;
     maxPlayers: number;
-    // @QUESTION: La IA me ha quitado el id de aqui, porque me daba un fallo en los controladores
+    // @QUESTION: The AI removed the id from here, because it was giving me an error in the controllers
 }
 
 export class CreateSportUseCase {
@@ -21,8 +21,7 @@ export class CreateSportUseCase {
         private readonly idGenerator: IdGenerator,
     ) { }
 
-    // @QUESTION: La IA me ha sugerido que ponga async a este metodo, pero no se porque
-    execute(dto: CreateSportDto): Promise<Sport> {
+    async execute(dto: CreateSportDto): Promise<Sport> {
         const newSport = new Sport(
             this.idGenerator.generate(),
             dto.name,

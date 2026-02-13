@@ -5,26 +5,26 @@ import { Sport } from '../../domain/entities/sport.entity.js';
 export class InMemorySportRepository implements SportRepository {
     private sports: Sport[] = [];
 
-    // Crear un deporte
+    // Create a sport
     async create(sport: Sport): Promise<Sport> {
         this.sports.push(sport);
         return sport;
     }
 
-    // Buscar un deporte por su nombre
-    async findByName(name: string): Promise<Sport | null> {
+    // Search a sport by name
+    async GetByName(name: string): Promise<Sport | null> {
         const sport = this.sports.find(s => s.name === name);
         return sport || null;
     }
 
-    // Buscar un deporte por su ID
-    async findById(id: string): Promise<Sport | null> {
+    // Search a sport by id
+    async GetById(id: string): Promise<Sport | null> {
         const sport = this.sports.find(s => s.id === id);
         return sport || null;
     }
 
-    // Actualizar un deporte
-    async update(sport: Sport): Promise<Sport> {
+    // Update a sport
+    async update(id: string, sport: Sport): Promise<Sport> {
         const index = this.sports.findIndex(s => s.id === sport.id);
         if (index !== -1) {
             this.sports[index] = sport;
@@ -33,17 +33,18 @@ export class InMemorySportRepository implements SportRepository {
         throw new Error('Sport not found');
     }
 
-    // Eliminar un deporte
-    async delete(sport: Sport): Promise<void> {
-        const index = this.sports.findIndex(s => s.id === sport.id);
+    // Delete a sport
+    async delete(id: string): Promise<boolean> {
+        const index = this.sports.findIndex(s => s.id === id);
         if (index !== -1) {
             this.sports.splice(index, 1);
+            return true;
         }
-        throw new Error('Sport not found');
+        return false;
     }
 
-    // Buscar todos los deportes
-    async findAll(): Promise<Sport[]> {
+    // Get all sports
+    async GetAll(): Promise<Sport[]> {
         return this.sports;
     }
 }

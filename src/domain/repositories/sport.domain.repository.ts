@@ -3,34 +3,36 @@ import { Sport } from "../entities/sport.entity.js";
 
 export interface SportRepository {
     /**
-     * Registra un nuevo deporte en la base de datos.
+     * Register a new sport in the database.
      */
     create(sport: Sport): Promise<Sport>;
 
     /**
-     * Busca un deporte por su nombre.
-     * Útil para el login y validaciones de unicidad.
+     * Search a sport by name.
+     * Useful for login and uniqueness validations.
      */
-    findByName(name: string): Promise<Sport | null>;
+    GetByName(name: string): Promise<Sport | null>;
 
     /**
-     * Busca un deporte por su ID.
+     * Search a sport by id.
      */
-    findById(id: string): Promise<Sport | null>;
+    GetById(id: string): Promise<Sport | null>;
 
     /**
-     * Actualiza los datos de un deporte existente.
+     * Update a sport.
      */
-    update(sport: Sport): Promise<Sport>;
+    update(id: string, sport: Sport): Promise<Sport>;
 
     /**
-     * Elimina un deporte de la base de datos.
+     * Delete a sport from the database.
      */
-    delete(sport: Sport): Promise<void>;
+    delete(id: string): Promise<boolean>;
 
     /**
-     * Busca todos los deportes de la base de datos.
+     * Search all sports in the database.
      */
-    findAll(): Promise<Sport[]>;
+    GetAll(): Promise<Sport[]>;
+
+    // @QUESTION: Implement other method regardig the minPlayers and maxPlayers?
 
 }
