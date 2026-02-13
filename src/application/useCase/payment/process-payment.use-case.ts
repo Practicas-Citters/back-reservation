@@ -2,6 +2,8 @@ import { Payment, PaymentStatus, PaymentMethod } from "../../../domain/entities/
 import type { PaymentRepository } from "../../../domain/repositories/payment.repository.js";
 import type { Booking } from "../../../domain/entities/booking.entity.js";
 
+//caso de uso para procesar un pago (processPayment)
+
 interface ProcessPaymentInput {
     amount: number;
     method: PaymentMethod;
