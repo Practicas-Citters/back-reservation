@@ -12,15 +12,22 @@ export interface CreateSportDto {
     iconUrl: string;
     minPlayers: number;
     maxPlayers: number;
-    // @QUESTION: The AI removed the id from here, because it was giving me an error in the controllers
 }
 
+/**
+ * Use Case to create a new sport.
+ */
 export class CreateSportUseCase {
     constructor(
         private readonly sportRepository: SportRepository,
         private readonly idGenerator: IdGenerator,
     ) { }
 
+    /**
+     * Executes the creation of a sport.
+     * @param dto - Data Transfer Object containing sport details.
+     * @returns The created Sport entity.
+     */
     async execute(dto: CreateSportDto): Promise<Sport> {
         const newSport = new Sport(
             this.idGenerator.generate(),

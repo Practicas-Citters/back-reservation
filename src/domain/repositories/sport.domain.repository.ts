@@ -11,22 +11,22 @@ export interface SportRepository {
      * Search a sport by name.
      * Useful for login and uniqueness validations.
      */
-    GetByName(name: string): Promise<Sport | null>;
+    getByName(name: string): Promise<Sport | null>;
 
     /**
      * Search a sport by id.
      */
-    GetById(id: string): Promise<Sport | null>;
+    getById(id: string): Promise<Sport | null>;
 
     /**
      * Update a sport.
      */
-    update(id: string, sport: Sport): Promise<Sport>;
+    update(sport: Sport): Promise<Sport>; // @QUESTION: Id as parameter in addition to sport?
 
     /**
      * Delete a sport from the database.
      */
-    delete(id: string): Promise<boolean>;
+    delete(id: string): Promise<boolean>; // @QUESTION: Id or Sport as parameter?
 
     /**
      * Search all sports in the database.

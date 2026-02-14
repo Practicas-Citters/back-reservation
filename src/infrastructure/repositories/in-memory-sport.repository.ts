@@ -12,19 +12,19 @@ export class InMemorySportRepository implements SportRepository {
     }
 
     // Search a sport by name
-    async GetByName(name: string): Promise<Sport | null> {
+    async getByName(name: string): Promise<Sport | null> {
         const sport = this.sports.find(s => s.name === name);
         return sport || null;
     }
 
     // Search a sport by id
-    async GetById(id: string): Promise<Sport | null> {
+    async getById(id: string): Promise<Sport | null> {
         const sport = this.sports.find(s => s.id === id);
         return sport || null;
     }
 
     // Update a sport
-    async update(id: string, sport: Sport): Promise<Sport> {
+    async update(sport: Sport): Promise<Sport> {
         const index = this.sports.findIndex(s => s.id === sport.id);
         if (index !== -1) {
             this.sports[index] = sport;
