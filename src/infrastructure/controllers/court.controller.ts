@@ -21,6 +21,12 @@ export class CourtController {
     ) {
         this.create = this.create.bind(this);
         this.getAll = this.getAll.bind(this);
+        this.getBySport = this.getBySport.bind(this);
+        this.getById = this.getById.bind(this);
+        this.getByUser = this.getByUser.bind(this);
+        this.getByName = this.getByName.bind(this);
+        this.update = this.update.bind(this);
+        this.delete = this.delete.bind(this);
     }
 
     async create(req: Request, res: Response) {
@@ -51,6 +57,10 @@ export class CourtController {
                 return;
             }
             const court = await this.getCourtByIdUseCase.execute(id);
+            if (!court) {
+                res.status(404).json({ error: 'Court not found' });
+                return;
+            }
             res.status(200).json(court);
         } catch (error: any) {
             console.error(error);
@@ -66,6 +76,10 @@ export class CourtController {
                 return;
             }
             const court = await this.getCourtByNameUseCase.execute(name);
+            if (!court) {
+                res.status(404).json({ error: 'Court not found' });
+                return;
+            }
             res.status(200).json(court);
         } catch (error: any) {
             console.error(error);
@@ -106,15 +120,21 @@ export class CourtController {
     async update(req: Request, res: Response) {
         try {
             const { id } = req.params;
+            console.log('Update Body:', req.body); // DEBUG LOG
             if (!id || typeof id !== 'string') {
                 res.status(400).json({ error: 'Invalid court ID' });
                 return;
             }
             const { name, description, image, capacity, pricePerHour, isAvailable, sport, user } = req.body;
-            const court = await this.updateCourtUseCase.execute(id, { name, description, image, capacity, pricePerHour, isAvailable, sport, user });
+            //@QUESTION: Why is it necessary to pass the id in the body?
+            const court = await this.updateCourtUseCase.execute(id, { id, name, description, image, capacity, pricePerHour, isAvailable, sport, user });
             res.status(200).json(court);
         } catch (error: any) {
             console.error(error);
+            if (error.message === 'Court not found') {
+                res.status(404).json({ error: 'Court not found' });
+                return;
+            }
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }
@@ -133,6 +153,4 @@ export class CourtController {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }
-
-
 }

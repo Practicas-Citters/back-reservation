@@ -8,22 +8,20 @@ export class CreateCourtUseCase {
         private readonly idGenerator: UuidIdGenerator
     ) { }
 
-    async execute(payload: Omit<Court, 'id'>): Promise<Court> {
+    async execute(dto: Omit<Court, 'id'>): Promise<Court> {
         const id = this.idGenerator.generate();
-        const court = { ...payload, id };
-        // Note: Direct casting or better entity construction might be needed depending on strictness
-        // Assuming the repository handles the object correctly or we instantiate the class
-        // Let's instantiate the class for correctness if the entity is a class
+        const court = { ...dto, id };
+
         const newCourt = new Court(
             id,
-            payload.name,
-            payload.description,
-            payload.image,
-            payload.capacity,
-            payload.pricePerHour,
-            payload.isAvailable,
-            payload.sport,
-            payload.user
+            dto.name,
+            dto.description,
+            dto.image,
+            dto.capacity,
+            dto.pricePerHour,
+            dto.isAvailable,
+            dto.sport,
+            dto.user
         );
         return this.courtRepository.create(newCourt);
     }

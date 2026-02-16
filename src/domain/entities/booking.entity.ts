@@ -21,7 +21,7 @@ export class Booking {
         public numPeople: number,
         public totalPrice: number,
         public status: BookingStatus,
-        public payment: Payment | null, // Relación con Pago (pendiendo de crear entidad)
+        public payment: Payment | null, // Related to payment
         public createdAt: Date,
         public updatedAt: Date
     ) { }
