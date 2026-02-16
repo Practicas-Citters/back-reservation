@@ -21,7 +21,7 @@ const paymentController = new PaymentController(
     getBookingPaymentsUseCase 
 );
 
-// ✅ TODAS LAS RUTAS
+//Rutas
 router.post('/', paymentController.process);
 router.get('/history/:userId', paymentController.getHistory);
 router.get('/:id', paymentController.getById); 
