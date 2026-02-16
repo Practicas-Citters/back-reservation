@@ -1,5 +1,5 @@
 import { Court } from "../../../domain/entities/court.entity.js";
-import type { CourtRepository } from "../../../domain/repositories/court.repository.js";
+import type { CourtRepository } from "../../../domain/repositories/court.domain.repository.js";
 import { UuidIdGenerator } from "../../../infrastructure/services/uuid-id.generator.js";
 
 export class CreateCourtUseCase {

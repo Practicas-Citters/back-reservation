@@ -1,11 +1,23 @@
 import type { Request, Response } from 'express';
 import { CreateCourtUseCase } from '../../application/useCase/court/create-court.use-case.js';
-import { GetCourtsUseCase } from '../../application/useCase/court/get-courts.use-case.js';
+import { GetAllCourtsUseCase } from '../../application/useCase/court/getAllCourts.use-case.js';
+import { GetCourtBySportUseCase } from '../../application/useCase/court/getBySport.use-case.js';
+import { GetCourtByIdUseCase } from '../../application/useCase/court/getById.use-case.js';
+import { GetCourtByUserUseCase } from '../../application/useCase/court/getByUser.use-case.js';
+import { GetCourtByNameUseCase } from '../../application/useCase/court/getByName.use-case.js';
+import { UpdateCourtUseCase } from '../../application/useCase/court/update-court.use-case.js';
+import { DeleteCourtUseCase } from '../../application/useCase/court/delete-court.use-case.js';
 
 export class CourtController {
     constructor(
         private readonly createCourtUseCase: CreateCourtUseCase,
-        private readonly getCourtsUseCase: GetCourtsUseCase
+        private readonly getCourtsUseCase: GetAllCourtsUseCase,
+        private readonly getCourtBySportUseCase: GetCourtBySportUseCase,
+        private readonly getCourtByIdUseCase: GetCourtByIdUseCase,
+        private readonly getCourtByUserUseCase: GetCourtByUserUseCase,
+        private readonly getCourtByNameUseCase: GetCourtByNameUseCase,
+        private readonly updateCourtUseCase: UpdateCourtUseCase,
+        private readonly deleteCourtUseCase: DeleteCourtUseCase
     ) {
         this.create = this.create.bind(this);
         this.getAll = this.getAll.bind(this);
@@ -30,4 +42,97 @@ export class CourtController {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }
+
+    async getById(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            if (!id || typeof id !== 'string') {
+                res.status(400).json({ error: 'Invalid court ID' });
+                return;
+            }
+            const court = await this.getCourtByIdUseCase.execute(id);
+            res.status(200).json(court);
+        } catch (error: any) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+
+    async getByName(req: Request, res: Response) {
+        try {
+            const { name } = req.params;
+            if (!name || typeof name !== 'string') {
+                res.status(400).json({ error: 'Invalid court name' });
+                return;
+            }
+            const court = await this.getCourtByNameUseCase.execute(name);
+            res.status(200).json(court);
+        } catch (error: any) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+
+    async getBySport(req: Request, res: Response) {
+        try {
+            const { sport } = req.params;
+            if (!sport || typeof sport !== 'string') {
+                res.status(400).json({ error: 'Invalid sport' });
+                return;
+            }
+            const court = await this.getCourtBySportUseCase.execute(sport);
+            res.status(200).json(court);
+        } catch (error: any) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+
+    async getByUser(req: Request, res: Response) {
+        try {
+            const { user } = req.params;
+            if (!user || typeof user !== 'string') {
+                res.status(400).json({ error: 'Invalid user' });
+                return;
+            }
+            const court = await this.getCourtByUserUseCase.execute(user);
+            res.status(200).json(court);
+        } catch (error: any) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+
+    async update(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            if (!id || typeof id !== 'string') {
+                res.status(400).json({ error: 'Invalid court ID' });
+                return;
+            }
+            const { name, description, image, capacity, pricePerHour, isAvailable, sport, user } = req.body;
+            const court = await this.updateCourtUseCase.execute(id, { name, description, image, capacity, pricePerHour, isAvailable, sport, user });
+            res.status(200).json(court);
+        } catch (error: any) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+
+    async delete(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            if (!id || typeof id !== 'string') {
+                res.status(400).json({ error: 'Invalid court ID' });
+                return;
+            }
+            const court = await this.deleteCourtUseCase.execute(id);
+            res.status(200).json(court);
+        } catch (error: any) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
+
+
 }

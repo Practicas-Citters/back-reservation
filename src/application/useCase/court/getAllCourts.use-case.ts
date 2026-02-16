@@ -1,10 +1,10 @@
 import { Court } from "../../../domain/entities/court.entity.js";
-import type { CourtRepository } from "../../../domain/repositories/court.repository.js";
+import type { CourtRepository } from "../../../domain/repositories/court.domain.repository.js";
 
-export class GetCourtsUseCase {
+export class GetAllCourtsUseCase {
     constructor(private readonly courtRepository: CourtRepository) { }
 
     async execute(): Promise<Court[]> {
-        return this.courtRepository.findAll();
+        return this.courtRepository.getAll();
     }
 }
