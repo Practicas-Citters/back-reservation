@@ -32,3 +32,6 @@ coverage/
 .cache/
 tmp/
 temp/
+
+docker/
+.docker/

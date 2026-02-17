@@ -1,4 +1,6 @@
+import 'reflect-metadata';
 import express from 'express';
+import { connectDB } from './src/infrastructure/config/postgres.config.js';
 
 const app = express();
 
@@ -32,6 +34,7 @@ app.use('/api/sport', sportRouter);
 app.use('/api/payments', paymentRouter);
 
 
-app.listen(4000, () => {
-    console.log("Server running on port 4000");
+app.listen(process.env.PORT || 4000, async () => {
+    await connectDB();
+    console.log("Server running on port ", process.env.PORT || 4000);
 });
