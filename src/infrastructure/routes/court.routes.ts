@@ -12,7 +12,7 @@ import { courtRepository, idGenerator } from '../container.js';
 
 const router = Router();
 
-// Inyección de dependencias
+// Dependency Injection
 const createCourtUseCase = new CreateCourtUseCase(courtRepository, idGenerator);
 const getCourtsUseCase = new GetAllCourtsUseCase(courtRepository);
 const getCourtBySportUseCase = new GetCourtBySportUseCase(courtRepository);

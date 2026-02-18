@@ -29,6 +29,10 @@ export class CourtController {
         this.delete = this.delete.bind(this);
     }
 
+    /**
+     * Create a new court.
+     * Expects name, description, image, capacity, pricePerHour, isAvailable, sport, user in the request body.
+     */
     async create(req: Request, res: Response) {
         try {
             const court = await this.createCourtUseCase.execute(req.body);
@@ -39,6 +43,9 @@ export class CourtController {
         }
     }
 
+    /**
+     * Get all courts.
+     */
     async getAll(req: Request, res: Response) {
         try {
             const courts = await this.getCourtsUseCase.execute();
@@ -49,6 +56,10 @@ export class CourtController {
         }
     }
 
+    /**
+     * Get a court by its ID.
+     * Expects 'id' in the route parameters.
+     */
     async getById(req: Request, res: Response) {
         try {
             const { id } = req.params;
@@ -68,6 +79,10 @@ export class CourtController {
         }
     }
 
+    /**
+     * Get a court by its Name.
+     * Expects 'name' in the route parameters.
+     */
     async getByName(req: Request, res: Response) {
         try {
             const { name } = req.params;
@@ -87,6 +102,10 @@ export class CourtController {
         }
     }
 
+    /**
+     * Get courts by Sport ID.
+     * Expects 'sport' in the route parameters.
+     */
     async getBySport(req: Request, res: Response) {
         try {
             const { sport } = req.params;
@@ -102,6 +121,10 @@ export class CourtController {
         }
     }
 
+    /**
+     * Get courts by User ID.
+     * Expects 'user' in the route parameters.
+     */
     async getByUser(req: Request, res: Response) {
         try {
             const { user } = req.params;
@@ -117,28 +140,71 @@ export class CourtController {
         }
     }
 
+    /**
+     * Update an existing court (Partial update).
+     * Method: PATCH
+     * Expects 'id' in route parameters and fields to update in body.
+     */
     async update(req: Request, res: Response) {
         try {
             const { id } = req.params;
-            console.log('Update Body:', req.body); // DEBUG LOG
             if (!id || typeof id !== 'string') {
                 res.status(400).json({ error: 'Invalid court ID' });
                 return;
             }
+
             const { name, description, image, capacity, pricePerHour, isAvailable, sport, user } = req.body;
-            //@QUESTION: Why is it necessary to pass the id in the body?
-            const court = await this.updateCourtUseCase.execute(id, { id, name, description, image, capacity, pricePerHour, isAvailable, sport, user });
-            res.status(200).json(court);
-        } catch (error: any) {
-            console.error(error);
-            if (error.message === 'Court not found') {
-                res.status(404).json({ error: 'Court not found' });
+
+            // Validations
+            if (name !== undefined && (typeof name !== 'string' || name.trim() === '')) {
+                res.status(400).json({ error: 'Invalid name. Must be a non-empty string.' });
                 return;
             }
+
+            if (capacity !== undefined) {
+                if (typeof capacity !== 'number' || !Number.isInteger(capacity) || capacity <= 0) {
+                    res.status(400).json({ error: 'Invalid capacity. Must be a positive integer.' });
+                    return;
+                }
+            }
+
+            if (pricePerHour !== undefined) {
+                if (typeof pricePerHour !== 'number' || pricePerHour < 0) {
+                    res.status(400).json({ error: 'Invalid pricePerHour. Must be a non-negative number.' });
+                    return;
+                }
+            }
+
+            try {
+                // Pass validated data (UpdateCourtDto structure) to UseCase
+                const court = await this.updateCourtUseCase.execute(id, {
+                    name,
+                    description,
+                    image,
+                    capacity,
+                    pricePerHour,
+                    isAvailable,
+                    // relations skipped for now
+                });
+                res.status(200).json(court);
+            } catch (error: any) {
+                if (error.message === `Court with id ${id} not found`) {
+                    res.status(404).json({ error: 'Court not found' });
+                    return;
+                }
+                throw error;
+            }
+
+        } catch (error: any) {
+            console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }
 
+    /**
+     * Delete a court by its ID.
+     * Expects 'id' in the route parameters.
+     */
     async delete(req: Request, res: Response) {
         try {
             const { id } = req.params;
