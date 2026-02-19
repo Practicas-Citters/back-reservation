@@ -1,7 +1,6 @@
 
 import { User, UserRole } from "../../../domain/entities/user.entity.js";
 import type { UserRepository } from "../../../domain/repositories/user.domain.repository.js";
-
 // Definimos un puerto para el servicio de encriptación (Hexagonal: puerto de salida)
 // Esto permite que la implementación real (bcrypt, argon2) esté en infraestructura.
 export interface PasswordHasher {
