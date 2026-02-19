@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize-typescript';
 import * as dotenv from 'dotenv';
+import { UserModel } from '../models/user.model.js';
 
 dotenv.config();
 
@@ -11,13 +12,13 @@ export const sequelize = new Sequelize({
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || '',
   logging: console.log, // Set to false to disable logging
-  models: [], // We will add models here as we create them
+  models: [UserModel], // We will add models here as we create them
 });
 
 export const connectDB = async () => {
     try {
         await sequelize.authenticate();
-        // await sequelize.sync({ alter: true }); // Use with caution in production
+        // await sequelize.sync(); // Use with caution in production
         console.log('Database connection established successfully.');
     } catch (error) {
         console.error('Unable to connect to the database:', error);

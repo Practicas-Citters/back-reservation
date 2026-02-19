@@ -9,7 +9,7 @@ export class AuthController {
     async register(req: Request, res: Response) {
         try {
 
-            return res.status(200).json({ message: 'User registered successfully test' });
+
 
             const { fullName, username, email, password, phone, birthDate } = req.body;
 

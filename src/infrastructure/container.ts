@@ -4,9 +4,12 @@ import { BcryptPasswordHasher } from './services/bcrypt-password.hasher.js';
 import { UuidIdGenerator } from './services/uuid-id.generator.js';
 import { InMemoryCourtRepository } from './repositories/in-memory-court.repository.js';
 import { InMemorySportRepository } from './repositories/in-memory-sport.repository.js';
+import { UserRepositoryImpl } from './repositories/user.repository.impl.js';
 
 // Singleton instances
-export const userRepository = new InMemoryUserRepository();
+// export const userRepository = new InMemoryUserRepository();
+
+export const userRepository = new UserRepositoryImpl();
 export const paymentRepository = new PaymentRepositoryImpl();
 export const passwordHasher = new BcryptPasswordHasher();
 export const idGenerator = new UuidIdGenerator();
