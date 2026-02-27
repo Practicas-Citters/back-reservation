@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import type { PasswordHasher } from '../../application/useCase/auth/register-user.use-case.js';
+import type { PasswordHasher } from '../../application/use-cases/auth/register-user.use-case.js';
 
 export class BcryptPasswordHasher implements PasswordHasher {
     async hash(password: string): Promise<string> {

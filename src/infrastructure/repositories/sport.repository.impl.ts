@@ -44,7 +44,7 @@ export class SportRepositoryImpl implements SportRepository {
     }
 
     // Get all sports
-    async GetAll(): Promise<Sport[]> {
+    async getAll(): Promise<Sport[]> {
         return this.sports;
     }
 }

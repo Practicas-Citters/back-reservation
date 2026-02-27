@@ -4,7 +4,7 @@ import { connectDB } from './src/infrastructure/config/postgres.config.js';
 
 const app = express();
 
-// Verbos HTTP
+// HTTP Verbs
 
 app.use(express.json());
 
@@ -14,18 +14,7 @@ import { courtRouter } from './src/infrastructure/routes/court.routes.js';
 import { sportRouter } from './src/infrastructure/routes/sport.routes.js';
 import { paymentRouter } from './src/infrastructure/routes/payment.routes.js'; // Assuming this exists based on conflict
 
-// Note: checking conflict content, paymentRouter was in the other branch
-// Let's look at the conflict again
-// <<<<<<
-// import { courtRouter } ...
-// app.use ...
-// ======
-// import { sportRouter } ...
-// import { paymentRouter } ...
-// app.use ...
-// >>>>>>
 
-// I will just put them all together.
 
 app.use('/api/auth', authRouter);
 app.use('/api/booking', bookingRouter);

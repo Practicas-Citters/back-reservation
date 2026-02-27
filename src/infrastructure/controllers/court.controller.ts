@@ -1,12 +1,12 @@
 import type { Request, Response } from 'express';
-import { CreateCourtUseCase } from '../../application/useCase/court/create-court.use-case.js';
-import { GetAllCourtsUseCase } from '../../application/useCase/court/getAllCourts.use-case.js';
-import { GetCourtBySportUseCase } from '../../application/useCase/court/getBySport.use-case.js';
-import { GetCourtByIdUseCase } from '../../application/useCase/court/getById.use-case.js';
-import { GetCourtByUserUseCase } from '../../application/useCase/court/getByUser.use-case.js';
-import { GetCourtByNameUseCase } from '../../application/useCase/court/getByName.use-case.js';
-import { UpdateCourtUseCase } from '../../application/useCase/court/update-court.use-case.js';
-import { DeleteCourtUseCase } from '../../application/useCase/court/delete-court.use-case.js';
+import { CreateCourtUseCase } from '../../application/use-cases/court/create.use-case.js';
+import { GetAllCourtsUseCase } from '../../application/use-cases/court/get-all.use-case.js';
+import { GetCourtBySportUseCase } from '../../application/use-cases/court/get-by-sport.use-case.js';
+import { GetCourtByIdUseCase } from '../../application/use-cases/court/get-by-id.use-case.js';
+import { GetCourtByUserUseCase } from '../../application/use-cases/court/get-by-user.use-case.js';
+import { GetCourtByNameUseCase } from '../../application/use-cases/court/get-by-name.use-case.js';
+import { UpdateCourtUseCase } from '../../application/use-cases/court/update.use-case.js';
+import { DeleteCourtUseCase } from '../../application/use-cases/court/delete.use-case.js';
 
 export class CourtController {
     constructor(

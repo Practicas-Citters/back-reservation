@@ -28,7 +28,7 @@ We use semantic naming to ensure the code is "self-explanatory":
 | **Classes** | PascalCase | `UserProcessor` |
 | **Variables / Functions** | camelCase | `calculateTotalAmount()` |
 | **Constants** | UPPER_SNAKE_CASE | `MAX_RETRY_ATTEMPTS` |
-| **Files** | kebab-case | `auth-service.js` |
+| **Files** | kebab-case.type | `auth.service.js` |
 
 ---
 

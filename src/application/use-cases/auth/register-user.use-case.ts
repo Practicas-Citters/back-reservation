@@ -1,13 +1,13 @@
 
 import { User, UserRole } from "../../../domain/entities/user.entity.js";
 import type { UserRepository } from "../../../domain/repositories/user.domain.repository.js";
-// Definimos un puerto para el servicio de encriptación (Hexagonal: puerto de salida)
-// Esto permite que la implementación real (bcrypt, argon2) esté en infraestructura.
+// Define a port for the encryption service (Hexagonal: outgoing port)
+// This allows the actual implementation (bcrypt, argon2) to be in infrastructure.
 export interface PasswordHasher {
     hash(password: string): Promise<string>;
 }
 
-// Definimos un puerto para generar IDs (Hexagonal: puerto de salida)
+// Define a port for generating IDs (Hexagonal: outgoing port)
 export interface IdGenerator {
     generate(): string;
 }
@@ -19,7 +19,7 @@ export interface RegisterUserDto {
     password: string;
     phone: string;
     birthDate: Date;
-    // role, isPremium, points se inicializan por defecto
+    // role, isPremium, points are initialized by default
 }
 
 export class RegisterUserUseCase {
@@ -35,18 +35,18 @@ export class RegisterUserUseCase {
 
 
 
-        // 1. Verificar si el usuario ya existe
+        // 1. Verify if user already exists
 
-        const existingUser = await this.userRepository.findByEmail(dto.email);
+        const existingUser = await this.userRepository.getByEmail(dto.email);
         if (existingUser) {
             throw new Error(`User with email ${dto.email} already exists`);
         }
 
-        // 2. Hashear la contraseña
+        // 2. Hash the password
         const hashedPassword = await this.passwordHasher.hash(dto.password);
 
-        // 3. Generar ID y crear la entidad User
-        // Valores por defecto: role=USUARIO, profilePicture='', isPremium=false, points=0
+        // 3. Generate ID and create User entity
+        // Default values: role=USUARIO, profilePicture='', isPremium=false, points=0
         const newUser = new User(
             this.idGenerator.generate(),
             dto.fullName,
@@ -56,12 +56,12 @@ export class RegisterUserUseCase {
             dto.phone,
             dto.birthDate,
             UserRole.USUARIO,
-            '', // profilePicture por defecto vacía o url default
+            '', // profilePicture empty by default or default url
             false,
             0
         );
 
-        // 4. Guardar en repositorio
+        // 4. Save in repository
         return this.userRepository.create(newUser);
     }
 }
