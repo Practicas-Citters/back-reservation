@@ -1,7 +1,7 @@
 import type { CourtRepository } from '../../domain/repositories/court.domain.repository.js';
 import { Court } from '../../domain/entities/court.entity.js';
 
-export class InMemoryCourtRepository implements CourtRepository {
+export class CourtRepositoryImpl implements CourtRepository {
     private courts: Court[] = [];
 
     /**
