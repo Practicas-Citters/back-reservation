@@ -1,8 +1,8 @@
 import type { Request, Response } from 'express';
-import { ProcessPaymentUseCase } from '../../application/useCase/payment/process-payment.use-case.js';
-import { GetPaymentHistoryUseCase } from '../../application/useCase/payment/get-payment-history.use-case.js';
-import { GetPaymentByIdUseCase } from '../../application/useCase/payment/get-payment-by-id.use-case.js';
-import { GetBookingPaymentsUseCase } from '../../application/useCase/payment/get-booking-payments.use-case.js';
+import { ProcessPaymentUseCase } from '../../application/use-cases/payment/process.use-case.js';
+import { GetPaymentHistoryUseCase } from '../../application/use-cases/payment/get-history.use-case.js';
+import { GetPaymentByIdUseCase } from '../../application/use-cases/payment/get-by-id.use-case.js';
+import { GetBookingPaymentsUseCase } from '../../application/use-cases/payment/get-by-booking.use-case.js';
 
 export class PaymentController {
     constructor(
@@ -22,7 +22,7 @@ export class PaymentController {
         try {
             const { amount, method, userId, booking } = req.body;
 
-            // En un caso real, aquí validaríamos los datos (DTO)
+            // In a real case, we would validate the data here (DTO)
             const payment = await this.processPaymentUseCase.execute({
                 amount,
                 method,
@@ -54,40 +54,40 @@ export class PaymentController {
     }
 
     async getById(req: Request, res: Response) {
-    try {
-        const { id } = req.params;
-        
-        if (!id) {
-            return res.status(400).json({ error: 'Payment ID is required' });
-        }
+        try {
+            const { id } = req.params;
 
-        const payment = await this.getPaymentByIdUseCase.execute(id as string);
-        res.json(payment);
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            res.status(404).json({ error: error.message });
-        } else {
-            res.status(404).json({ error: 'Payment not found' });
+            if (!id) {
+                return res.status(400).json({ error: 'Payment ID is required' });
+            }
+
+            const payment = await this.getPaymentByIdUseCase.execute(id as string);
+            res.json(payment);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                res.status(404).json({ error: error.message });
+            } else {
+                res.status(404).json({ error: 'Payment not found' });
+            }
         }
     }
-}
 
-async getBookingPayments(req: Request, res: Response) {
-    try {
-        const { bookingId } = req.params;
-        
-        if (!bookingId) {
-            return res.status(400).json({ error: 'Booking ID is required' });
-        }
+    async getBookingPayments(req: Request, res: Response) {
+        try {
+            const { bookingId } = req.params;
 
-        const payments = await this.getBookingPaymentsUseCase.execute(bookingId as string);
-        res.json(payments);
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            res.status(404).json({ error: error.message });
-        } else {
-            res.status(404).json({ error: 'Booking payments not found' });
+            if (!bookingId) {
+                return res.status(400).json({ error: 'Booking ID is required' });
+            }
+
+            const payments = await this.getBookingPaymentsUseCase.execute(bookingId as string);
+            res.json(payments);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                res.status(404).json({ error: error.message });
+            } else {
+                res.status(404).json({ error: 'Booking payments not found' });
+            }
         }
     }
-}
 }

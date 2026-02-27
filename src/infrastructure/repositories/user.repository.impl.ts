@@ -22,13 +22,13 @@ export class UserRepositoryImpl implements UserRepository {
         return this.toEntity(newUser);
     }
 
-    async findByEmail(email: string): Promise<User | null> {
+    async getByEmail(email: string): Promise<User | null> {
         const user = await UserModel.findOne({ where: { email } });
         if (!user) return null;
         return this.toEntity(user);
     }
 
-    async findById(id: string): Promise<User | null> {
+    async getById(id: string): Promise<User | null> {
         const user = await UserModel.findByPk(id);
         if (!user) return null;
         return this.toEntity(user);

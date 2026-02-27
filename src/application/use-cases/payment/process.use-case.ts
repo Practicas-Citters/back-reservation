@@ -2,7 +2,7 @@ import { Payment, PaymentStatus, PaymentMethod } from "../../../domain/entities/
 import type { PaymentRepository } from "../../../domain/repositories/payment.repository.js";
 import type { Booking } from "../../../domain/entities/booking.entity.js";
 
-//caso de uso para procesar un pago (processPayment)
+// Use case to process a payment (processPayment)
 
 interface ProcessPaymentInput {
     amount: number;
@@ -23,7 +23,7 @@ export class ProcessPaymentUseCase {
             input.amount,
             PaymentStatus.PENDING,
             input.method,
-            null, // transactionId inicial
+            null, // Initial transactionId
             input.userId,
             input.booking,
             new Date()

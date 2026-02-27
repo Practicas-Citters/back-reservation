@@ -9,15 +9,15 @@ export class PaymentRepositoryImpl implements PaymentRepository {
         return payment;
     }
 
-    async findById(id: string): Promise<Payment | null> {
+    async getById(id: string): Promise<Payment | null> {
         return this.payments.find(p => p.id === id) || null;
     }
 
-    async findAllByBookingId(bookingId: string): Promise<Payment[]> {
+    async getAllByBookingId(bookingId: string): Promise<Payment[]> {
         return this.payments.filter(p => p.booking.id === bookingId);
     }
 
-    async findAllByUserId(userId: string): Promise<Payment[]> {
+    async getAllByUserId(userId: string): Promise<Payment[]> {
         return this.payments.filter(p => p.userId === userId);
     }
 }

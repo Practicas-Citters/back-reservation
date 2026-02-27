@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { RegisterUserUseCase } from '../../application/useCase/auth/register-user.use-case.js';
+import { RegisterUserUseCase } from '../../application/use-cases/auth/register-user.use-case.js';
 
 export class AuthController {
     constructor(private registerUserUseCase: RegisterUserUseCase) {
@@ -13,7 +13,7 @@ export class AuthController {
 
             const { fullName, username, email, password, phone, birthDate } = req.body;
 
-            // En un caso real, validaríamos los datos antes (o usaríamos un middleware/schema validation)
+            // In a real case, we would validate the data first (or use middleware/schema validation)
             const user = await this.registerUserUseCase.execute({
                 fullName,
                 username,
@@ -23,7 +23,7 @@ export class AuthController {
                 birthDate: new Date(birthDate)
             });
 
-            // Retornamos el usuario sin la contraseña (aunque deberíamos usar un DTO de respuesta)
+            // We return the user without the password (though we should use a response DTO)
             const response = {
                 id: user.id,
                 fullName: user.fullName,
@@ -35,7 +35,7 @@ export class AuthController {
             res.status(201).json(response);
         } catch (error: any) {
             console.error(error);
-            // Manejo básico de errores
+            // Basic error handling
             if (error.message.includes('already exists')) {
                 res.status(409).json({ error: error.message });
             } else {

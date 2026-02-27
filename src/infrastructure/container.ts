@@ -1,5 +1,5 @@
 import { InMemoryUserRepository } from './repositories/in-memory-user.repository.js';
-import { PaymentRepositoryImpl } from './repositories/payment-repository.impl.js';
+import { PaymentRepositoryImpl } from './repositories/payment.repository.impl.js';
 import { BcryptPasswordHasher } from './services/bcrypt-password.hasher.js';
 import { UuidIdGenerator } from './services/uuid-id.generator.js';
 import { CourtRepositoryImpl } from './repositories/court.repository.impl.js';

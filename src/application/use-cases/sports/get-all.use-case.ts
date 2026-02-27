@@ -15,6 +15,6 @@ export class GetSportUseCase {
      * @returns A promise that resolves to an array of Sport entities.
      */
     execute(): Promise<Sport[]> {
-        return this.sportRepository.GetAll();
+        return this.sportRepository.getAll();
     }
 }
