@@ -2,7 +2,7 @@ import type { SportRepository } from '../../domain/repositories/sport.domain.rep
 import { Sport } from '../../domain/entities/sport.entity.js';
 
 
-export class InMemorySportRepository implements SportRepository {
+export class SportRepositoryImpl implements SportRepository {
     private sports: Sport[] = [];
 
     // Create a sport
