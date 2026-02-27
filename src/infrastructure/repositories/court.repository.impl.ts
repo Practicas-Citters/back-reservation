@@ -1,148 +1,74 @@
 import type { CourtRepository } from '../../domain/repositories/court.domain.repository.js';
 import { Court } from '../../domain/entities/court.entity.js';
-import { CourtModel } from '../models/court.model.js';
-import { SportModel } from '../models/sport.model.js';
-import { UserModel } from '../models/user.model.js';
-import { Sport } from '../../domain/entities/sport.entity.js';
-import { User, UserRole } from '../../domain/entities/user.entity.js';
 
 export class CourtRepositoryImpl implements CourtRepository {
+    private courts: Court[] = [];
 
+    /**
+     * Create a new court.
+     */
     async create(court: Court): Promise<Court> {
-        const newCourt = await CourtModel.create({
-            id: court.id,
-            name: court.name,
-            description: court.description,
-            image: court.image,
-            capacity: court.capacity,
-            pricePerHour: court.pricePerHour,
-            isAvailable: court.isAvailable,
-            sportId: court.sport.id,
-            userId: court.user.id
-        });
-
-        // We fetch it again to get the included associations (sport and user)
-        const fetchCreated = await CourtModel.findByPk(newCourt.id, {
-            include: [SportModel, UserModel]
-        });
-
-        if (!fetchCreated) {
-            throw new Error('Error creating Court');
-        }
-
-        return this.toEntity(fetchCreated);
+        this.courts.push(court);
+        return court;
     }
 
+    /**
+     * Get all courts.
+     */
     async getAll(): Promise<Court[]> {
-        const courts = await CourtModel.findAll({
-            include: [SportModel, UserModel]
-        });
-        return courts.map(court => this.toEntity(court));
+        return this.courts;
     }
 
+    /**
+     * Get a court by its Name.
+     */
     async getByName(name: string): Promise<Court | null> {
-        const court = await CourtModel.findOne({
-            where: { name },
-            include: [SportModel, UserModel]
-        });
-        if (!court) return null;
-        return this.toEntity(court);
+        return this.courts.find(court => court.name === name) || null;
     }
 
+    /**
+     * Get courts by User ID.
+     */
     async getByUserId(userId: string): Promise<Court[]> {
-        const courts = await CourtModel.findAll({
-            where: { userId },
-            include: [SportModel, UserModel]
-        });
-        return courts.map(court => this.toEntity(court));
+        return this.courts.filter(court => court.user.id === userId);
     }
 
+    /**
+     * Get courts by Sport ID.
+     */
     async getBySport(sportId: string): Promise<Court[]> {
-        const courts = await CourtModel.findAll({
-            where: { sportId },
-            include: [SportModel, UserModel]
-        });
-        return courts.map(court => this.toEntity(court));
+        return this.courts.filter(court => court.sport.id === sportId);
     }
 
+    /**
+     * Get a court by its ID.
+     */
     async getById(id: string): Promise<Court | null> {
-        const court = await CourtModel.findByPk(id, {
-            include: [SportModel, UserModel]
-        });
-        if (!court) return null;
-        return this.toEntity(court);
+        return this.courts.find(court => court.id === id) || null;
     }
 
+    /**
+     * Update an existing court.
+     */
     async update(id: string, court: Court): Promise<Court> {
-        const [affectedCount] = await CourtModel.update({
-            name: court.name,
-            description: court.description,
-            image: court.image,
-            capacity: court.capacity,
-            pricePerHour: court.pricePerHour,
-            isAvailable: court.isAvailable,
-            sportId: court.sport.id,
-            userId: court.user.id
-        }, {
-            where: { id }
-        });
-
-        if (affectedCount === 0) {
+        const index = this.courts.findIndex(court => court.id === id);
+        if (index === -1) {
             throw new Error('Court not found');
         }
-
-        const updatedCourt = await CourtModel.findByPk(id, {
-            include: [SportModel, UserModel]
-        });
-
-        if (!updatedCourt) {
-            throw new Error('Error fetching updated Court');
-        }
-
-        return this.toEntity(updatedCourt);
+        this.courts[index] = court;
+        return court;
     }
 
+    /**
+     * Delete a court by its ID.
+     */
     async delete(id: string): Promise<boolean> {
-        const deletedCount = await CourtModel.destroy({
-            where: { id }
-        });
-        return deletedCount > 0;
+        const index = this.courts.findIndex(court => court.id === id);
+        if (index === -1) {
+            throw new Error('Court not found');
+        }
+        this.courts.splice(index, 1);
+        return true;
     }
 
-    private toEntity(model: CourtModel): Court {
-        const sportEntity = new Sport(
-            model.sport?.id || '',
-            model.sport?.name || '',
-            model.sport?.courtType || '',
-            model.sport?.minPlayers || 0,
-            model.sport?.maxPlayers || 0,
-            model.sport?.duration || 0
-        );
-
-        const userEntity = new User(
-            model.user?.id || '',
-            model.user?.fullName || '',
-            model.user?.username || '',
-            model.user?.email || '',
-            model.user?.password || '',
-            model.user?.phone || '',
-            model.user?.birthDate || new Date(),
-            model.user?.role || UserRole.USUARIO,
-            model.user?.profilePicture || '',
-            model.user?.isPremium || false,
-            model.user?.points || 0
-        );
-
-        return new Court(
-            model.id,
-            model.name,
-            model.description,
-            model.image,
-            model.capacity,
-            model.pricePerHour,
-            model.isAvailable,
-            sportEntity,
-            userEntity
-        );
-    }
 }
