@@ -23,6 +23,6 @@ export class Payment {
         public transactionId: string | null,
         public userId: string, // ID of the user performing the payment
         public booking: Booking, // Associated booking
-        public createdAt: Date
+        public createdAt: string
     ) { }
 }
