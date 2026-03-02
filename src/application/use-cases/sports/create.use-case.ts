@@ -6,17 +6,7 @@ export interface IdGenerator {
     generate(): string;
 }
 
-// Define a port for the encryption service (Hexagonal: output port)
-export interface CreateSportDto {
-    name: string;
-    iconUrl: string;
-    minPlayers: number;
-    maxPlayers: number;
-}
-
-/**
- * Use Case to create a new sport.
- */
+// Use Case to create a new sport.
 export class CreateSportUseCase {
     constructor(
         private readonly sportRepository: SportRepository,
@@ -25,10 +15,10 @@ export class CreateSportUseCase {
 
     /**
      * Executes the creation of a sport.
-     * @param dto - Data Transfer Object containing sport details.
+     * @param dto - Data Transfer Object containing sport details (excluding ID).
      * @returns The created Sport entity.
      */
-    async execute(dto: CreateSportDto): Promise<Sport> {
+    async execute(dto: Omit<Sport, 'id'>): Promise<Sport> {
         const newSport = new Sport(
             this.idGenerator.generate(),
             dto.name,

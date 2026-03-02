@@ -1,9 +1,7 @@
 import type { CourtRepository } from "../../../domain/repositories/court.domain.repository.js";
 import { Court } from "../../../domain/entities/court.entity.js";
 
-/**
- * Use Case to delete a court by ID.
- */
+// Use Case to delete a court by ID.
 export class DeleteCourtUseCase {
     constructor(private readonly courtRepository: CourtRepository) { }
 
