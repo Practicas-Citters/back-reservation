@@ -1,14 +1,14 @@
 import { Router } from 'express';
-import { AuthController } from '../controllers/auth.controller.js';
-import { RegisterUserUseCase } from '../../application/use-cases/auth/register-user.use-case.js';
+import { UserController } from '../controllers/user.controller.js';
+import { CreateUseCase } from '../../application/use-cases/user/create.use-case.js';
 import { userRepository, passwordHasher, idGenerator } from '../container.js';
 
 const router = Router();
 
 // Dependency injection
-const registerUserUseCase = new RegisterUserUseCase(userRepository, passwordHasher, idGenerator);
-const authController = new AuthController(registerUserUseCase);
+const registerUserUseCase = new CreateUseCase(userRepository, passwordHasher, idGenerator);
+const authController = new UserController(registerUserUseCase);
 
-router.post('/register', authController.register);
+router.post('/register', authController.create);
 
 export { router as authRouter };

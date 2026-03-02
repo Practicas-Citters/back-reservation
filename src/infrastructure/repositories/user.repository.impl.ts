@@ -34,6 +34,29 @@ export class UserRepositoryImpl implements UserRepository {
         return this.toEntity(user);
     }
 
+    async getAll(): Promise<User[]> {
+        const user = await UserModel.findAll();
+        return user.map(u => this.toEntity(u));
+    }
+
+    async getByRole(role: UserRole): Promise<User[] | null> {
+        const user = await UserModel.findAll({ where: { role } });
+        if (!user) return null;
+        return user.map(u => this.toEntity(u));
+    }
+
+    async getByUsername(username: string): Promise<User | null> {
+        const user = await UserModel.findOne({ where: { username } });
+        if (!user) return null;
+        return this.toEntity(user);
+    }
+
+    async getByIsPremium(isPremium: boolean): Promise<User[] | null> {
+        const user = await UserModel.findAll({ where: { isPremium } });
+        if (!user) return null;
+        return user.map(u => this.toEntity(u));
+    }
+
     async update(user: User): Promise<User> {
         const [affectedCount, [updatedUser]] = await UserModel.update({
             fullName: user.fullName,
@@ -56,6 +79,11 @@ export class UserRepositoryImpl implements UserRepository {
         }
 
         return this.toEntity(updatedUser);
+    }
+
+    async delete(id: string): Promise<boolean> {
+        const deletedUser = await UserModel.destroy({ where: { id } });
+        return deletedUser > 0;
     }
 
     private toEntity(model: UserModel): User {

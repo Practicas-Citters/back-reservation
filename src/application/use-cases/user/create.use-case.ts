@@ -12,7 +12,7 @@ export interface IdGenerator {
     generate(): string;
 }
 
-export interface RegisterUserDto {
+export interface CreateDto {
     fullName: string;
     username: string;
     email: string;
@@ -22,7 +22,7 @@ export interface RegisterUserDto {
     // role, isPremium, points are initialized by default
 }
 
-export class RegisterUserUseCase {
+export class CreateUseCase {
     constructor(
         private readonly userRepository: UserRepository,
         private readonly passwordHasher: PasswordHasher,
@@ -31,7 +31,7 @@ export class RegisterUserUseCase {
 
 
 
-    async execute(dto: RegisterUserDto): Promise<User> {
+    async execute(dto: CreateDto): Promise<User> {
 
 
 
