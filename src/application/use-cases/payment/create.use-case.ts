@@ -2,22 +2,22 @@ import { Payment, PaymentStatus, PaymentMethod } from "../../../domain/entities/
 import type { PaymentRepository } from "../../../domain/repositories/payment.repository.js";
 import type { Booking } from "../../../domain/entities/booking.entity.js";
 
-// Use case to process a payment (processPayment)
+// Use case to create a payment
 
-interface ProcessPaymentInput {
+interface CreatePaymentInput {
     amount: number;
     method: PaymentMethod;
     userId: string;
     booking: Booking;
 }
 
-export class ProcessPaymentUseCase {
+export class CreatePaymentUseCase {
     constructor(
         private paymentRepository: PaymentRepository,
         private idGenerator: { generate(): string }
     ) { }
 
-    async execute(input: ProcessPaymentInput): Promise<Payment> {
+    async execute(input: CreatePaymentInput): Promise<Payment> {
         const payment = new Payment(
             this.idGenerator.generate(),
             input.amount,
@@ -26,7 +26,7 @@ export class ProcessPaymentUseCase {
             null, // Initial transactionId
             input.userId,
             input.booking,
-            new Date()
+            new Date().toISOString()
         );
 
         return await this.paymentRepository.create(payment);
