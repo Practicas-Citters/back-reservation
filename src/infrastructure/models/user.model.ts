@@ -15,14 +15,14 @@ export class UserModel extends Model {
     type: DataType.STRING,
     allowNull: false,
   })
-  fullName!: string;
+  declare fullName: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
     unique: true,
   })
-  username!: string;
+  declare username: string;
 
   @Column({
     type: DataType.STRING,
@@ -32,50 +32,50 @@ export class UserModel extends Model {
       isEmail: true,
     },
   })
-  email!: string;
+  declare email: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  password!: string;
+  declare password: string;
 
   @Column({
     type: DataType.STRING,
-    allowNull: true, 
+    allowNull: true,
   })
-  phone!: string | null;
+  declare phone: string | null;
 
   @Column({
-    type: DataType.DATE,
+    type: DataType.STRING,
     allowNull: false,
   })
-  birthDate!: Date;
+  declare birthDate: string;
 
   @Column({
     type: DataType.ENUM(...Object.values(UserRole) as string[]),
     defaultValue: UserRole.USUARIO,
     allowNull: false,
   })
-  role!: UserRole;
+  declare role: UserRole;
 
   @Column({
     type: DataType.STRING,
     allowNull: true,
   })
-  profilePicture!: string | null;
+  declare profilePicture: string | null;
 
   @Default(false)
   @Column({
-      type: DataType.BOOLEAN,
-      allowNull: false
+    type: DataType.BOOLEAN,
+    allowNull: false
   })
-  isPremium!: boolean;
+  declare isPremium: boolean;
 
   @Default(0)
   @Column({
-      type: DataType.INTEGER,
-      allowNull: false
+    type: DataType.INTEGER,
+    allowNull: false
   })
-  points!: number;
+  declare points: number;
 }

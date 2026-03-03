@@ -18,7 +18,7 @@ export interface CreateDto {
     email: string;
     password: string;
     phone: string;
-    birthDate: Date;
+    birthDate: string;
     // role, isPremium, points are initialized by default
 }
 

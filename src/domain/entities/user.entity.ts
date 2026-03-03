@@ -13,7 +13,7 @@ export class User {
         public email: string,
         public password: string,
         public phone: string,
-        public birthDate: Date,
+        public birthDate: string,
         public role: UserRole,
         public profilePicture: string,
         public isPremium: boolean,

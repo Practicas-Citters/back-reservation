@@ -8,9 +8,10 @@ export interface UpdateUserDto {
     email?: string;
     password?: string;
     phone?: string;
-    birthDate?: Date;
+    birthDate?: string;
     role?: string;
     isPremium?: boolean;
+    profilePicture?: string;
     points?: number;
 }
 
@@ -45,6 +46,7 @@ export class UpdateUseCase {
             user.role = dto.role as UserRole;
         }
         if (dto.isPremium !== undefined) user.isPremium = dto.isPremium;
+        if (dto.profilePicture !== undefined) user.profilePicture = dto.profilePicture;
         if (dto.points !== undefined) user.points = dto.points;
 
         return this.userRepository.update(user);
