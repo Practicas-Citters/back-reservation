@@ -15,14 +15,14 @@ export class Booking {
         public id: string,
         public user: User,
         public court: Court,
-        public date: Date,
+        public date: string,
         public startTime: string, // Format: "HH:mm"
         public endTime: string,   // Format: "HH:mm"
         public numPeople: number,
         public totalPrice: number,
         public status: BookingStatus,
         public payment: Payment | null, // Related to payment
-        public createdAt: Date,
-        public updatedAt: Date
+        public createdAt: string,
+        public updatedAt: string
     ) { }
 }

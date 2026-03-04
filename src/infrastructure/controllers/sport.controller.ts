@@ -1,10 +1,10 @@
 import type { Request, Response } from 'express';
-import { CreateSportUseCase } from '../../application/use-cases/sports/create.use-case.js';
-import { GetSportUseCase } from '../../application/use-cases/sports/get-all.use-case.js';
-import { GetSportByIdUseCase } from '../../application/use-cases/sports/get-by-id.use-case.js';
-import { GetSportByNameUseCase } from '../../application/use-cases/sports/get-by-name.use-case.js';
-import { UpdateSportUseCase } from '../../application/use-cases/sports/update.use-case.js';
-import { DeleteSportUseCase } from '../../application/use-cases/sports/delete.use-case.js';
+import { CreateSportUseCase } from '../../application/use-cases/sport/create.use-case.js';
+import { GetSportUseCase } from '../../application/use-cases/sport/get-all.use-case.js';
+import { GetSportByIdUseCase } from '../../application/use-cases/sport/get-by-id.use-case.js';
+import { GetSportByNameUseCase } from '../../application/use-cases/sport/get-by-name.use-case.js';
+import { UpdateSportUseCase } from '../../application/use-cases/sport/update.use-case.js';
+import { DeleteSportUseCase } from '../../application/use-cases/sport/delete.use-case.js';
 
 export class SportController {
     /**

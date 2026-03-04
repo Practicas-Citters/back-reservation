@@ -31,10 +31,10 @@ export class UpdateSportUseCase {
         }
 
         // Update fields if they are present in the DTO
-        if (dto.name) sport.name = dto.name;
-        if (dto.iconUrl) sport.iconUrl = dto.iconUrl;
-        if (dto.minPlayers) sport.minPlayers = dto.minPlayers;
-        if (dto.maxPlayers) sport.maxPlayers = dto.maxPlayers;
+        if (dto.name !== undefined) sport.name = dto.name;
+        if (dto.iconUrl !== undefined) sport.iconUrl = dto.iconUrl;
+        if (dto.minPlayers !== undefined) sport.minPlayers = dto.minPlayers;
+        if (dto.maxPlayers !== undefined) sport.maxPlayers = dto.maxPlayers;
 
         return this.sportRepository.update(sport);
     }

@@ -1,14 +1,16 @@
 import { Court } from "../../../domain/entities/court.entity.js";
 import type { CourtRepository } from "../../../domain/repositories/court.domain.repository.js";
-import { UuidIdGenerator } from "../../../infrastructure/services/uuid-id.generator.js";
 
-/**
- * Use Case to create a new court.
- */
+// Define a port to generate IDs (Hexagonal: output port)
+export interface IdGenerator {
+    generate(): string;
+}
+
+// Use Case to create a new court.
 export class CreateCourtUseCase {
     constructor(
         private readonly courtRepository: CourtRepository,
-        private readonly idGenerator: UuidIdGenerator
+        private readonly idGenerator: IdGenerator,
     ) { }
 
     /**
@@ -19,7 +21,6 @@ export class CreateCourtUseCase {
      */
     async execute(dto: Omit<Court, 'id'>): Promise<Court> {
         const id = this.idGenerator.generate();
-        const court = { ...dto, id };
 
         const newCourt = new Court(
             id,
