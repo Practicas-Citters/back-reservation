@@ -223,21 +223,25 @@ export class UserController {
 
     /**
      * Get users by Is Premium status.
-     * Expects 'isPremium' as a boolean in the route parameters.
+     * Expects 'isPremium' as 'true' or 'false' in the route parameters.
      */
     async getByIsPremium(req: Request, res: Response) {
         try {
             const { isPremium } = req.params;
-            if (!isPremium || typeof isPremium !== 'boolean') {
-                res.status(400).json({ error: 'Invalid isPremium' });
+
+            if (isPremium !== 'true' && isPremium !== 'false') {
+                res.status(400).json({ error: 'Invalid isPremium parameter. Must be "true" or "false"' });
                 return;
             }
-            const user = await this.getByIsPremiumUseCase.execute(isPremium);
-            if (!user) {
-                res.status(404).json({ error: 'User not found' });
+
+            const isPremiumBool = isPremium === 'true';
+
+            const users = await this.getByIsPremiumUseCase.execute(isPremiumBool);
+            if (!users || users.length === 0) {
+                res.status(404).json({ error: 'Users not found' });
                 return;
             }
-            res.status(200).json(user);
+            res.status(200).json(users);
         } catch (error: any) {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });
