@@ -1,7 +1,7 @@
 import { Sport } from "../../../domain/entities/sport.entity.js";
 import type { SportRepository } from "../../../domain/repositories/sport.domain.repository.js";
 
-export interface GetSportByNameDto {
+export interface GetSportByNameInput {
     name: string;
 }
 
@@ -18,7 +18,7 @@ export class GetSportByNameUseCase {
      * Executes the use case to get an sport by its name.
      * @returns A promise that resolves to an array of Sport entities.
      */
-    execute(dto: GetSportByNameDto): Promise<Sport | null> {
-        return this.sportRepository.getByName(dto.name);
+    execute(input: GetSportByNameInput): Promise<Sport | null> {
+        return this.sportRepository.getByName(input.name);
     }
 }
