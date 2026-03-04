@@ -8,7 +8,7 @@ const app = express();
 
 app.use(express.json());
 
-import { authRouter } from './src/infrastructure/routes/auth.routes.js';
+import { userRouter } from './src/infrastructure/routes/user.routes.js';
 import { bookingRouter } from './src/infrastructure/routes/booking.routes.js';
 import { courtRouter } from './src/infrastructure/routes/court.routes.js';
 import { sportRouter } from './src/infrastructure/routes/sport.routes.js';
@@ -16,7 +16,7 @@ import { paymentRouter } from './src/infrastructure/routes/payment.routes.js'; /
 
 
 
-app.use('/api/auth', authRouter);
+app.use('/api/user', userRouter);
 app.use('/api/booking', bookingRouter);
 app.use('/api/court', courtRouter);
 app.use('/api/sport', sportRouter);
