@@ -8,8 +8,9 @@ export interface IdGenerator {
     generate(): string;
 }
 
-// Manual DTO for Booking creation
-export interface CreateBookingDto {
+
+// Input for Booking creation
+export interface CreateBookingInput {
     userId: string;
     courtId: string;
     date: string;
@@ -30,19 +31,19 @@ export class CreateBookingUseCase {
 
     /**
      * Executes the creation of a booking.
-     * @param dto - Data Transfer Object with booking details.
+     * @param input - Input object with booking details.
      * @returns The created Booking entity.
      */
-    async execute(dto: CreateBookingDto): Promise<Booking> {
+    async execute(input: CreateBookingInput): Promise<Booking> {
         // 1. Fetches User and Court entities by their IDs.
-        const user = await this.userRepository.getById(dto.userId);
+        const user = await this.userRepository.getById(input.userId);
         if (!user) {
-            throw new Error(`User with id ${dto.userId} not found`);
+            throw new Error(`User with id ${input.userId} not found`);
         }
 
-        const court = await this.courtRepository.getById(dto.courtId);
+        const court = await this.courtRepository.getById(input.courtId);
         if (!court) {
-            throw new Error(`Court with id ${dto.courtId} not found`);
+            throw new Error(`Court with id ${input.courtId} not found`);
         }
 
         // 2. Generates a unique ID and current timestamps.
@@ -54,11 +55,11 @@ export class CreateBookingUseCase {
             id,
             user,
             court,
-            dto.date,
-            dto.startTime,
-            dto.endTime,
-            dto.numPeople,
-            dto.totalPrice,
+            input.date,
+            input.startTime,
+            input.endTime,
+            input.numPeople,
+            input.totalPrice,
             BookingStatus.PENDING,
             null, // Initial payment is null
             now,
