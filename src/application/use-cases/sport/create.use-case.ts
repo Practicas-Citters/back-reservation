@@ -15,16 +15,16 @@ export class CreateSportUseCase {
 
     /**
      * Executes the creation of a sport.
-     * @param dto - Data Transfer Object containing sport details (excluding ID).
+     * @param input - Data Transfer Object containing sport details (excluding ID).
      * @returns The created Sport entity.
      */
-    async execute(dto: Omit<Sport, 'id'>): Promise<Sport> {
+    async execute(input: Omit<Sport, 'id'>): Promise<Sport> {
         const newSport = new Sport(
             this.idGenerator.generate(),
-            dto.name,
-            dto.iconUrl,
-            dto.minPlayers,
-            dto.maxPlayers
+            input.name,
+            input.iconUrl,
+            input.minPlayers,
+            input.maxPlayers
         );
         return this.sportRepository.create(newSport);
     }

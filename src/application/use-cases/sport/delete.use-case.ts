@@ -1,7 +1,7 @@
 import type { SportRepository } from "../../../domain/repositories/sport.domain.repository.js";
 
 // Define a port for the encryption service (Hexagonal: output port)
-export interface DeleteSportDto {
+export interface DeleteSportInput {
     id: string;
 }
 
@@ -15,10 +15,10 @@ export class DeleteSportUseCase {
 
     /**
      * Executes the deletion of a sport.
-     * @param dto - DTO containing the ID of the sport to delete.
+     * @param input - INPUT containing the ID of the sport to delete.
      * @returns True if deletion was successful, false otherwise.
      */
-    async execute(dto: DeleteSportDto): Promise<boolean> {
-        return this.sportRepository.delete(dto.id);
+    async execute(input: DeleteSportInput): Promise<boolean> {
+        return this.sportRepository.delete(input.id);
     }
 }
