@@ -2,7 +2,7 @@ import type { UserRepository } from "../../../domain/repositories/user.domain.re
 import { User, UserRole } from "../../../domain/entities/user.entity.js";
 
 // Define a port for the encryption service (Hexagonal: output port)
-export interface UpdateUserDto {
+export interface UpdateUserInput {
     fullName?: string;
     username?: string;
     email?: string;
@@ -21,33 +21,33 @@ export class UpdateUseCase {
     /**
      * Executes the update of a sport.
      * @param id - The ID of the sport to update.
-     * @param dto - The data to update.
+     * @param input - The data to update.
      * @returns The updated Sport entity.
      * @throws Error if the sport is not found.
      */
 
-    async execute(id: string, dto: UpdateUserDto): Promise<User> {
+    async execute(id: string, input: UpdateUserInput): Promise<User> {
         const user = await this.userRepository.getById(id);
         if (!user) {
             throw new Error(`User with id ${id} not found`);
         }
 
-        if (dto.fullName !== undefined) user.fullName = dto.fullName;
-        if (dto.username !== undefined) user.username = dto.username;
-        if (dto.email !== undefined) user.email = dto.email;
-        if (dto.password !== undefined) user.password = dto.password;
-        if (dto.phone !== undefined) user.phone = dto.phone;
-        if (dto.birthDate !== undefined) user.birthDate = dto.birthDate;
-        if (dto.role !== undefined) {
-            const isValidRole = Object.values(UserRole).includes(dto.role as UserRole);
+        if (input.fullName !== undefined) user.fullName = input.fullName;
+        if (input.username !== undefined) user.username = input.username;
+        if (input.email !== undefined) user.email = input.email;
+        if (input.password !== undefined) user.password = input.password;
+        if (input.phone !== undefined) user.phone = input.phone;
+        if (input.birthDate !== undefined) user.birthDate = input.birthDate;
+        if (input.role !== undefined) {
+            const isValidRole = Object.values(UserRole).includes(input.role as UserRole);
             if (!isValidRole) {
                 throw new Error(`Invalid role. Allowed values: ${Object.values(UserRole).join(', ')}`);
             }
-            user.role = dto.role as UserRole;
+            user.role = input.role as UserRole;
         }
-        if (dto.isPremium !== undefined) user.isPremium = dto.isPremium;
-        if (dto.profilePicture !== undefined) user.profilePicture = dto.profilePicture;
-        if (dto.points !== undefined) user.points = dto.points;
+        if (input.isPremium !== undefined) user.isPremium = input.isPremium;
+        if (input.profilePicture !== undefined) user.profilePicture = input.profilePicture;
+        if (input.points !== undefined) user.points = input.points;
 
         return this.userRepository.update(user);
     }

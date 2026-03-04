@@ -16,22 +16,22 @@ export class CreateCourtUseCase {
     /**
      * Executes the creation of a court.
      * Generates a new unique ID and persists the court.
-     * @param dto - Data Transfer Object with court details (excluding ID).
+     * @param input - Data Transfer Object with court details (excluding ID).
      * @returns The created Court entity.
      */
-    async execute(dto: Omit<Court, 'id'>): Promise<Court> {
+    async execute(input: Omit<Court, 'id'>): Promise<Court> {
         const id = this.idGenerator.generate();
 
         const newCourt = new Court(
             id,
-            dto.name,
-            dto.description,
-            dto.image,
-            dto.capacity,
-            dto.pricePerHour,
-            dto.isAvailable,
-            dto.sport,
-            dto.user
+            input.name,
+            input.description,
+            input.image,
+            input.capacity,
+            input.pricePerHour,
+            input.isAvailable,
+            input.sport,
+            input.user
         );
         return this.courtRepository.create(newCourt);
     }

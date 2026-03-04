@@ -2,7 +2,7 @@ import { Sport } from "../../../domain/entities/sport.entity.js";
 import type { SportRepository } from "../../../domain/repositories/sport.domain.repository.js";
 
 // Define a port for the encryption service (Hexagonal: output port)
-export interface UpdateSportDto {
+export interface UpdateSportInput {
     name?: string;
     iconUrl?: string;
     minPlayers?: number;
@@ -20,21 +20,21 @@ export class UpdateSportUseCase {
     /**
      * Executes the update of a sport.
      * @param id - The ID of the sport to update.
-     * @param dto - The data to update.
+     * @param input - The data to update.
      * @returns The updated Sport entity.
      * @throws Error if the sport is not found.
      */
-    async execute(id: string, dto: UpdateSportDto): Promise<Sport> {
+    async execute(id: string, input: UpdateSportInput): Promise<Sport> {
         const sport = await this.sportRepository.getById(id);
         if (!sport) {
             throw new Error(`Sport with id ${id} not found`);
         }
 
-        // Update fields if they are present in the DTO
-        if (dto.name !== undefined) sport.name = dto.name;
-        if (dto.iconUrl !== undefined) sport.iconUrl = dto.iconUrl;
-        if (dto.minPlayers !== undefined) sport.minPlayers = dto.minPlayers;
-        if (dto.maxPlayers !== undefined) sport.maxPlayers = dto.maxPlayers;
+        // Update fields if they are present in the INPUT
+        if (input.name !== undefined) sport.name = input.name;
+        if (input.iconUrl !== undefined) sport.iconUrl = input.iconUrl;
+        if (input.minPlayers !== undefined) sport.minPlayers = input.minPlayers;
+        if (input.maxPlayers !== undefined) sport.maxPlayers = input.maxPlayers;
 
         return this.sportRepository.update(sport);
     }

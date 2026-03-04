@@ -32,7 +32,7 @@ export class PaymentController {
         try {
             const { amount, method, userId, booking } = req.body;
 
-            // In a real case, we would validate the data here (DTO)
+            // In a real case, we would validate the data here (INPUT)
             const payment = await this.createPaymentUseCase.execute({
                 amount,
                 method,
