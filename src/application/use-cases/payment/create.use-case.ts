@@ -1,5 +1,5 @@
 import { Payment, PaymentStatus, PaymentMethod } from "../../../domain/entities/payment.entity.js";
-import type { PaymentRepository } from "../../../domain/repositories/payment.repository.js";
+import type { PaymentRepository } from "../../../domain/repositories/payment.domain.repository.js";
 import type { Booking } from "../../../domain/entities/booking.entity.js";
 
 // Use case to create a payment
