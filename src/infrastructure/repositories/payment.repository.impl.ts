@@ -1,5 +1,5 @@
 import type { Payment } from "../../domain/entities/payment.entity.js";
-import type { PaymentRepository } from "../../domain/repositories/payment.repository.js";
+import type { PaymentRepository } from "../../domain/repositories/payment.domain.repository.js";
 
 export class PaymentRepositoryImpl implements PaymentRepository {
     private payments: Payment[] = [];

@@ -1,7 +1,7 @@
-import type { PaymentRepository } from "../../../domain/repositories/payment.repository.js";
+import type { PaymentRepository } from "../../../domain/repositories/payment.domain.repository.js";
 
 // Use case to delete a payment record
-export class DeletePaymentUseCase {
+export class DeleteUseCase {
     constructor(private paymentRepository: PaymentRepository) { }
 
     async execute(id: string): Promise<void> {
