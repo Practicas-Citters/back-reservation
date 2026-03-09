@@ -60,7 +60,9 @@ export class CourtRepositoryImpl implements CourtRepository {
 
     //Delete a court from the database by its ID.
     async delete(id: string): Promise<boolean> {
-        const deletedCount = await CourtModel.destroy({ where: { id } });
+        const deletedCount = await CourtModel.destroy({
+            where: { id }
+        });
         return deletedCount > 0;
     }
 
@@ -150,7 +152,7 @@ export class CourtRepositoryImpl implements CourtRepository {
         );
     }
 
-    // Map a UserModel to a User domain entity.
+    //Map a UserModel to a User domain entity.
     private userToEntity(model: UserModel): User {
         return new User(
             model.id,
