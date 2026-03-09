@@ -15,7 +15,7 @@ module.exports = {
         allowNull: false
       },
       username: {
-        type: Sequelize.STRING, 
+        type: Sequelize.STRING,
         allowNull: false,
         unique: true
       },
@@ -68,5 +68,7 @@ module.exports = {
 
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('users');
+    // Note: In some cases, you might want to drop the ENUM type as well if using Postgres
+    await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_users_role";');
   }
 };
