@@ -13,7 +13,7 @@ import { bookingRouter } from './src/infrastructure/routes/booking.routes.js';
 import { courtRouter } from './src/infrastructure/routes/court.routes.js';
 import { sportRouter } from './src/infrastructure/routes/sport.routes.js';
 import { paymentRouter } from './src/infrastructure/routes/payment.routes.js'; // Assuming this exists based on conflict
-
+import { scheduleRouter } from './src/infrastructure/routes/schedule.routes.js';
 
 
 app.use('/api/user', userRouter);
@@ -21,6 +21,7 @@ app.use('/api/booking', bookingRouter);
 app.use('/api/court', courtRouter);
 app.use('/api/sport', sportRouter);
 app.use('/api/payments', paymentRouter);
+app.use('/api/schedules', scheduleRouter);
 
 
 app.listen(process.env.PORT || 4000, async () => {
