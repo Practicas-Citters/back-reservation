@@ -1,8 +1,8 @@
-import type { PaymentRepository } from "../../../domain/repositories/payment.repository.js";
+import type { PaymentRepository } from "../../../domain/repositories/payment.domain.repository.js";
 import { PaymentStatus, Payment } from "../../../domain/entities/payment.entity.js";
 
 // Use case to process payment refunds
-export class RefundPaymentUseCase {
+export class RefundUseCase {
     constructor(private paymentRepository: PaymentRepository) { }
 
     async execute(paymentId: string): Promise<Payment> {

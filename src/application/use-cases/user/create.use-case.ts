@@ -12,7 +12,7 @@ export interface IdGenerator {
     generate(): string;
 }
 
-export interface CreateDto {
+export interface CreateInput {
     fullName: string;
     username: string;
     email: string;
@@ -31,30 +31,30 @@ export class CreateUseCase {
 
 
 
-    async execute(dto: CreateDto): Promise<User> {
+    async execute(input: CreateInput): Promise<User> {
 
 
 
         // 1. Verify if user already exists
 
-        const existingUser = await this.userRepository.getByEmail(dto.email);
+        const existingUser = await this.userRepository.getByEmail(input.email);
         if (existingUser) {
-            throw new Error(`User with email ${dto.email} already exists`);
+            throw new Error(`User with email ${input.email} already exists`);
         }
 
         // 2. Hash the password
-        const hashedPassword = await this.passwordHasher.hash(dto.password);
+        const hashedPassword = await this.passwordHasher.hash(input.password);
 
         // 3. Generate ID and create User entity
         // Default values: role=USUARIO, profilePicture='', isPremium=false, points=0
         const newUser = new User(
             this.idGenerator.generate(),
-            dto.fullName,
-            dto.username,
-            dto.email,
+            input.fullName,
+            input.username,
+            input.email,
             hashedPassword,
-            dto.phone,
-            dto.birthDate,
+            input.phone,
+            input.birthDate,
             UserRole.USUARIO,
             '', // profilePicture empty by default or default url
             false,

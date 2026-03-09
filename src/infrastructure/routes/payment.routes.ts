@@ -4,9 +4,9 @@ import { CreatePaymentUseCase } from '../../application/use-cases/payment/create
 import { GetPaymentHistoryUseCase } from '../../application/use-cases/payment/get-history.use-case.js';
 import { GetPaymentByIdUseCase } from '../../application/use-cases/payment/get-by-id.use-case.js';
 import { GetBookingPaymentsUseCase } from '../../application/use-cases/payment/get-by-booking.use-case.js';
-import { UpdatePaymentUseCase } from '../../application/use-cases/payment/update-payment.use-case.js';
-import { RefundPaymentUseCase } from '../../application/use-cases/payment/refund-payment.use-case.js';
-import { DeletePaymentUseCase } from '../../application/use-cases/payment/delete-payment.use-case.js';
+import { UpdateUseCase } from '../../application/use-cases/payment/update.use-case.js';
+import { RefundUseCase } from '../../application/use-cases/payment/refund.use-case.js';
+import { DeleteUseCase } from '../../application/use-cases/payment/delete.use-case.js';
 import { paymentRepository, idGenerator } from '../container.js';
 
 const router = Router();
@@ -16,18 +16,18 @@ const createPaymentUseCase = new CreatePaymentUseCase(paymentRepository, idGener
 const getPaymentHistoryUseCase = new GetPaymentHistoryUseCase(paymentRepository);
 const getPaymentByIdUseCase = new GetPaymentByIdUseCase(paymentRepository);
 const getBookingPaymentsUseCase = new GetBookingPaymentsUseCase(paymentRepository);
-const updatePaymentUseCase = new UpdatePaymentUseCase(paymentRepository);
-const refundPaymentUseCase = new RefundPaymentUseCase(paymentRepository);
-const deletePaymentUseCase = new DeletePaymentUseCase(paymentRepository);
+const updateUseCase = new UpdateUseCase(paymentRepository);
+const refundUseCase = new RefundUseCase(paymentRepository);
+const deleteUseCase = new DeleteUseCase(paymentRepository);
 
 const paymentController = new PaymentController(
     createPaymentUseCase,
     getPaymentHistoryUseCase,
     getPaymentByIdUseCase,
     getBookingPaymentsUseCase,
-    updatePaymentUseCase,
-    refundPaymentUseCase,
-    deletePaymentUseCase
+    updateUseCase,
+    refundUseCase,
+    deleteUseCase
 );
 
 // Routes

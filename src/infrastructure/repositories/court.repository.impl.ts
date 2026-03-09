@@ -56,6 +56,7 @@ export class CourtRepositoryImpl implements CourtRepository {
 
         if (!updated) throw new Error('Court not found');
         return this.toEntity(updated);
+<<<<<<< HEAD
     }
 
     //Delete a court from the database by its ID.
@@ -77,6 +78,33 @@ export class CourtRepositoryImpl implements CourtRepository {
     }
 
     /**
+=======
+    }
+
+    /**
+     * Delete a court from the database by its ID.
+     */
+    async delete(id: string): Promise<boolean> {
+        const deletedCount = await CourtModel.destroy({
+            where: { id }
+        });
+        return deletedCount > 0;
+    }
+
+    /**
+     * Retrieve all courts owned by a specific user.
+     * Includes Sport and User associations.
+     */
+    async getByUserId(userId: string): Promise<Court[]> {
+        const courts = await CourtModel.findAll({
+            where: { userId },
+            include: [SportModel, UserModel]
+        });
+        return courts.map(c => this.toEntity(c));
+    }
+
+    /**
+>>>>>>> origin/development
      * Retrieve all courts associated with a specific sport.
      * Includes Sport and User associations.
      */
@@ -124,7 +152,13 @@ export class CourtRepositoryImpl implements CourtRepository {
         return courts.map(c => this.toEntity(c));
     }
 
+<<<<<<< HEAD
     //Map a CourtModel (Sequelize) to a Court domain entity.
+=======
+    /**
+     * Map a CourtModel (Sequelize) to a Court domain entity.
+     */
+>>>>>>> origin/development
     private toEntity(model: CourtModel): Court {
         return new Court(
             model.id,
@@ -139,7 +173,13 @@ export class CourtRepositoryImpl implements CourtRepository {
         );
     }
 
+<<<<<<< HEAD
     //Map a SportModel to a Sport domain entity.
+=======
+    /**
+     * Map a SportModel to a Sport domain entity.
+     */
+>>>>>>> origin/development
     private sportToEntity(model: SportModel): Sport {
         return new Sport(
             model.id,
@@ -150,7 +190,13 @@ export class CourtRepositoryImpl implements CourtRepository {
         );
     }
 
+<<<<<<< HEAD
     // Map a UserModel to a User domain entity.
+=======
+    /**
+     * Map a UserModel to a User domain entity.
+     */
+>>>>>>> origin/development
     private userToEntity(model: UserModel): User {
         return new User(
             model.id,
@@ -166,4 +212,8 @@ export class CourtRepositoryImpl implements CourtRepository {
             model.points
         );
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/development

@@ -176,7 +176,7 @@ export class CourtController {
             }
 
             try {
-                // Pass validated data (UpdateCourtDto structure) to UseCase
+                // Pass validated data (UpdateCourtInput structure) to UseCase
                 const court = await this.updateCourtUseCase.execute(id, {
                     name,
                     description,

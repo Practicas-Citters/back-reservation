@@ -3,9 +3,9 @@ import { CreatePaymentUseCase } from '../../application/use-cases/payment/create
 import { GetPaymentHistoryUseCase } from '../../application/use-cases/payment/get-history.use-case.js';
 import { GetPaymentByIdUseCase } from '../../application/use-cases/payment/get-by-id.use-case.js';
 import { GetBookingPaymentsUseCase } from '../../application/use-cases/payment/get-by-booking.use-case.js';
-import { UpdatePaymentUseCase } from '../../application/use-cases/payment/update-payment.use-case.js';
-import { RefundPaymentUseCase } from '../../application/use-cases/payment/refund-payment.use-case.js';
-import { DeletePaymentUseCase } from '../../application/use-cases/payment/delete-payment.use-case.js';
+import { UpdateUseCase } from '../../application/use-cases/payment/update.use-case.js';
+import { RefundUseCase } from '../../application/use-cases/payment/refund.use-case.js';
+import { DeleteUseCase } from '../../application/use-cases/payment/delete.use-case.js';
 
 export class PaymentController {
     constructor(
@@ -13,9 +13,9 @@ export class PaymentController {
         private getPaymentHistoryUseCase: GetPaymentHistoryUseCase,
         private getPaymentByIdUseCase: GetPaymentByIdUseCase,
         private getBookingPaymentsUseCase: GetBookingPaymentsUseCase,
-        private updatePaymentUseCase: UpdatePaymentUseCase,
-        private refundPaymentUseCase: RefundPaymentUseCase,
-        private deletePaymentUseCase: DeletePaymentUseCase
+        private updateUseCase: UpdateUseCase,
+        private refundUseCase: RefundUseCase,
+        private deleteUseCase: DeleteUseCase
 
     ) {
         this.create = this.create.bind(this);
@@ -32,7 +32,7 @@ export class PaymentController {
         try {
             const { amount, method, userId, booking } = req.body;
 
-            // In a real case, we would validate the data here (DTO)
+            // In a real case, we would validate the data here (INPUT)
             const payment = await this.createPaymentUseCase.execute({
                 amount,
                 method,
@@ -109,7 +109,7 @@ export class PaymentController {
             const { id } = req.params;
             const { status, transactionId } = req.body;
 
-            const payment = await this.updatePaymentUseCase.execute({
+            const payment = await this.updateUseCase.execute({
                 id: id as string,
                 status,
                 transactionId
@@ -126,7 +126,7 @@ export class PaymentController {
         try {
             const { id } = req.params;
 
-            const payment = await this.refundPaymentUseCase.execute(id as string);
+            const payment = await this.refundUseCase.execute(id as string);
 
             res.json(payment);
         } catch (error: any) {
@@ -139,7 +139,7 @@ export class PaymentController {
     async delete(req: Request, res: Response) {
         try {
             const { id } = req.params;
-            await this.deletePaymentUseCase.execute(id as string);
+            await this.deleteUseCase.execute(id as string);
             res.status(204).send();
         } catch (error: any) {
             console.error(error);

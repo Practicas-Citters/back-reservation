@@ -1,39 +1,169 @@
-import type { Payment } from "../../domain/entities/payment.entity.js";
-import type { PaymentRepository } from "../../domain/repositories/payment.repository.js";
+import { Payment } from "../../domain/entities/payment.entity.js";
+import type { PaymentRepository } from "../../domain/repositories/payment.domain.repository.js";
+import { PaymentModel } from "../models/payment.model.js";
+import { BookingModel } from "../models/booking.model.js";
+import { UserModel } from "../models/user.model.js";
+import { Booking } from "../../domain/entities/booking.entity.js";
+import { Court } from "../../domain/entities/court.entity.js";
+import { Sport } from "../../domain/entities/sport.entity.js";
+import { User } from "../../domain/entities/user.entity.js";
 
 export class PaymentRepositoryImpl implements PaymentRepository {
-    private payments: Payment[] = [];
 
+    /**
+     * Create a new payment and persist it to the database.
+     */
     async create(payment: Payment): Promise<Payment> {
-        this.payments.push(payment);
-        return payment;
+        const newPayment = await PaymentModel.create({
+            id: payment.id,
+            amount: payment.amount,
+            status: payment.status,
+            method: payment.method,
+            transactionId: payment.transactionId,
+            userId: payment.userId,
+            bookingId: payment.booking.id
+        });
+
+        const created = await PaymentModel.findByPk(newPayment.id, {
+            include: [{ model: BookingModel, include: ['court', 'user'] }, UserModel]
+        });
+
+        if (!created) throw new Error('Error creating payment');
+        return this.toEntity(created);
     }
 
+    /**
+     * Get a payment by its ID from the database.
+     */
     async getById(id: string): Promise<Payment | null> {
-        return this.payments.find(p => p.id === id) || null;
-    }
-
-    async update(id: string, updates: Partial<Pick<Payment, 'status' | 'transactionId'>>): Promise<Payment | null> {
-        const payment = this.payments.find(p => p.id === id);
+        const payment = await PaymentModel.findByPk(id, {
+            include: [{ model: BookingModel, include: ['court', 'user'] }, UserModel]
+        });
         if (!payment) return null;
-
-        Object.assign(payment, updates);
-        return payment;
+        return this.toEntity(payment);
     }
 
+    /**
+     * Update an existing payment in the database.
+     */
+    async update(id: string, updates: Partial<Pick<Payment, 'status' | 'transactionId'>>): Promise<Payment | null> {
+        await PaymentModel.update(updates, {
+            where: { id }
+        });
+
+        return this.getById(id);
+    }
+
+    /**
+     * Delete a payment by its ID from the database.
+     */
     async delete(id: string): Promise<boolean> {
-        const index = this.payments.findIndex(p => p.id === id);
-        if (index === -1) return false;
-
-        this.payments.splice(index, 1);
-        return true;
+        const deletedCount = await PaymentModel.destroy({
+            where: { id }
+        });
+        return deletedCount > 0;
     }
 
+    /**
+     * Get all payments associated with a specific booking ID.
+     */
     async getAllByBookingId(bookingId: string): Promise<Payment[]> {
-        return this.payments.filter(p => p.booking.id === bookingId);
+        const payments = await PaymentModel.findAll({
+            where: { bookingId },
+            include: [{ model: BookingModel, include: ['court', 'user'] }, UserModel]
+        });
+        return payments.map(p => this.toEntity(p));
     }
 
+    /**
+     * Get all payments associated with a specific user ID.
+     */
     async getAllByUserId(userId: string): Promise<Payment[]> {
-        return this.payments.filter(p => p.userId === userId);
+        const payments = await PaymentModel.findAll({
+            where: { userId },
+            include: [{ model: BookingModel, include: ['court', 'user'] }, UserModel]
+        });
+        return payments.map(p => this.toEntity(p));
+    }
+
+    /**
+     * Map a PaymentModel (Sequelize) to a Payment domain entity.
+     */
+    private toEntity(model: any): Payment {
+        const bookingModel = model.booking;
+
+        const sport = new Sport(
+            bookingModel.court.sport.id,
+            bookingModel.court.sport.name,
+            bookingModel.court.sport.iconUrl,
+            bookingModel.court.sport.minPlayers,
+            bookingModel.court.sport.maxPlayers
+        );
+
+        const owner = new User(
+            bookingModel.court.user.id,
+            bookingModel.court.user.fullName,
+            bookingModel.court.user.username,
+            bookingModel.court.user.email,
+            bookingModel.court.user.password,
+            bookingModel.court.user.phone || '',
+            bookingModel.court.user.birthDate,
+            bookingModel.court.user.role,
+            bookingModel.court.user.profilePicture || '',
+            bookingModel.court.user.isPremium,
+            bookingModel.court.user.points
+        );
+
+        const court = new Court(
+            bookingModel.court.id,
+            bookingModel.court.name,
+            bookingModel.court.description,
+            bookingModel.court.image,
+            bookingModel.court.capacity,
+            bookingModel.court.pricePerHour,
+            bookingModel.court.isAvailable,
+            sport,
+            owner
+        );
+
+        const user = new User(
+            bookingModel.user.id,
+            bookingModel.user.fullName,
+            bookingModel.user.username,
+            bookingModel.user.email,
+            bookingModel.user.password,
+            bookingModel.user.phone || '',
+            bookingModel.user.birthDate,
+            bookingModel.user.role,
+            bookingModel.user.profilePicture || '',
+            bookingModel.user.isPremium,
+            bookingModel.user.points
+        );
+
+        const booking = new Booking(
+            bookingModel.id,
+            user,
+            court,
+            bookingModel.date,
+            bookingModel.startTime,
+            bookingModel.endTime,
+            0, // numPeople (placeholder)
+            bookingModel.totalPrice,
+            bookingModel.status,
+            null, // payment (related entity)
+            model.createdAt.toISOString(),
+            model.createdAt.toISOString() // updatedAt (placeholder)
+        );
+
+        return new Payment(
+            model.id,
+            Number(model.amount),
+            model.status,
+            model.method,
+            model.transactionId,
+            model.userId,
+            booking,
+            model.createdAt.toISOString()
+        );
     }
 }
