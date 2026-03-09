@@ -7,41 +7,48 @@ import { SportModel } from './sport.model.js';
     timestamps: true,
 })
 export class CourtModel extends Model {
+    // id -> id of the court
     @PrimaryKey
     @Default(DataType.UUIDV4)
     @Column(DataType.UUID)
     declare id: string;
 
+    // name -> name of the court
     @Column({
         type: DataType.STRING,
         allowNull: false,
     })
     name!: string;
 
+    // description -> description of the court
     @Column({
         type: DataType.TEXT,
         allowNull: false,
     })
     description!: string;
 
+    // image -> image of the court
     @Column({
         type: DataType.STRING,
         allowNull: false,
     })
     image!: string;
 
+    // capacity -> capacity of the court
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
     })
     capacity!: number;
 
+    // pricePerHour -> price per hour of the court
     @Column({
         type: DataType.FLOAT,
         allowNull: false,
     })
     pricePerHour!: number;
 
+    // isAvailable -> availability of the court
     @Default(true)
     @Column({
         type: DataType.BOOLEAN,
@@ -49,6 +56,7 @@ export class CourtModel extends Model {
     })
     isAvailable!: boolean;
 
+    // sportId -> id of the sport played on the court
     @ForeignKey(() => SportModel)
     @Column({
         type: DataType.UUID,
@@ -59,6 +67,7 @@ export class CourtModel extends Model {
     @BelongsTo(() => SportModel)
     sport!: SportModel;
 
+    // userId -> id of the user who created the court
     @ForeignKey(() => UserModel)
     @Column({
         type: DataType.UUID,
