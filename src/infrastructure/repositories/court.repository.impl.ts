@@ -58,9 +58,7 @@ export class CourtRepositoryImpl implements CourtRepository {
         return this.toEntity(updated);
     }
 
-    /**
-     * Delete a court from the database by its ID.
-     */
+    //Delete a court from the database by its ID.
     async delete(id: string): Promise<boolean> {
         const deletedCount = await CourtModel.destroy({
             where: { id }
@@ -128,9 +126,7 @@ export class CourtRepositoryImpl implements CourtRepository {
         return courts.map(c => this.toEntity(c));
     }
 
-    /**
-     * Map a CourtModel (Sequelize) to a Court domain entity.
-     */
+    //Map a CourtModel (Sequelize) to a Court domain entity.
     private toEntity(model: CourtModel): Court {
         return new Court(
             model.id,
@@ -145,9 +141,7 @@ export class CourtRepositoryImpl implements CourtRepository {
         );
     }
 
-    /**
-     * Map a SportModel to a Sport domain entity.
-     */
+    //Map a SportModel to a Sport domain entity.
     private sportToEntity(model: SportModel): Sport {
         return new Sport(
             model.id,
@@ -158,9 +152,7 @@ export class CourtRepositoryImpl implements CourtRepository {
         );
     }
 
-    /**
-     * Map a UserModel to a User domain entity.
-     */
+    //Map a UserModel to a User domain entity.
     private userToEntity(model: UserModel): User {
         return new User(
             model.id,
