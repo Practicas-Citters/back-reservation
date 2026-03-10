@@ -17,7 +17,7 @@ export const sequelize = new Sequelize({
     password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME || '',
     logging: console.log, // Set to false to disable logging
-    models: [UserModel, SportModel, CourtModel, BookingModel, PaymentModel, ScheduleModel], // We will add models here as we create them
+    models: [UserModel, SportModel, CourtModel, BookingModel, PaymentModel, ScheduleModel],
 });
 
 export const connectDB = async () => {
