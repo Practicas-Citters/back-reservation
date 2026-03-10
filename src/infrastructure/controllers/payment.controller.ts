@@ -43,7 +43,7 @@ export class PaymentController {
             res.status(201).json(payment);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -60,7 +60,7 @@ export class PaymentController {
             res.status(200).json(history);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 

@@ -43,7 +43,7 @@ export class UserController {
             res.status(201).json({ message: 'User created successfully', user });
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -138,7 +138,7 @@ export class UserController {
 
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
 
         }
     }
@@ -158,7 +158,7 @@ export class UserController {
             res.status(200).json(user);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -171,7 +171,7 @@ export class UserController {
             res.status(200).json(users);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -194,7 +194,7 @@ export class UserController {
             res.status(200).json(user);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -217,7 +217,7 @@ export class UserController {
             res.status(200).json(user);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -244,7 +244,7 @@ export class UserController {
             res.status(200).json(users);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -269,7 +269,7 @@ export class UserController {
             res.status(200).json(user);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -292,7 +292,7 @@ export class UserController {
             res.status(200).json(user);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 

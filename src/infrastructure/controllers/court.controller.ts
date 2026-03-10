@@ -7,6 +7,7 @@ import { GetCourtByUserUseCase } from '../../application/use-cases/court/get-by-
 import { GetCourtByNameUseCase } from '../../application/use-cases/court/get-by-name.use-case.js';
 import { UpdateCourtUseCase } from '../../application/use-cases/court/update.use-case.js';
 import { DeleteCourtUseCase } from '../../application/use-cases/court/delete.use-case.js';
+import { error } from 'console';
 
 export class CourtController {
     constructor(
@@ -39,7 +40,7 @@ export class CourtController {
             res.status(201).json({ message: 'Court created successfully', court });
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -52,7 +53,7 @@ export class CourtController {
             res.status(200).json(courts);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -75,7 +76,7 @@ export class CourtController {
             res.status(200).json(court);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -98,7 +99,7 @@ export class CourtController {
             res.status(200).json(court);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -117,7 +118,7 @@ export class CourtController {
             res.status(200).json(court);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -136,7 +137,7 @@ export class CourtController {
             res.status(200).json(court);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -197,7 +198,7 @@ export class CourtController {
 
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -216,7 +217,7 @@ export class CourtController {
             res.status(200).json(court);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 }

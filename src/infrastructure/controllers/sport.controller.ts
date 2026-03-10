@@ -57,7 +57,7 @@ export class SportController {
 
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -71,7 +71,7 @@ export class SportController {
 
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -90,7 +90,7 @@ export class SportController {
             res.status(200).json(sport);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -109,7 +109,7 @@ export class SportController {
             res.status(200).json(sport);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -135,7 +135,7 @@ export class SportController {
             res.status(200).json(sport);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -154,7 +154,7 @@ export class SportController {
             res.status(200).json(sport);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 }

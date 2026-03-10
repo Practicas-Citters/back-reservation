@@ -60,7 +60,7 @@ export class BookingController {
             res.status(201).json(booking);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: error.message || 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -70,7 +70,7 @@ export class BookingController {
             res.status(200).json(bookings);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -85,7 +85,7 @@ export class BookingController {
             res.status(200).json(booking);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -100,7 +100,7 @@ export class BookingController {
             res.status(200).json(bookings);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -115,7 +115,7 @@ export class BookingController {
             res.status(200).json(bookings);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -130,7 +130,7 @@ export class BookingController {
             res.status(200).json(bookings);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -145,7 +145,7 @@ export class BookingController {
             res.status(200).json(bookings);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -160,7 +160,7 @@ export class BookingController {
             res.status(200).json(bookings);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -175,7 +175,7 @@ export class BookingController {
             res.status(200).json(bookings);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -190,7 +190,7 @@ export class BookingController {
             res.status(200).json(bookings);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -206,7 +206,7 @@ export class BookingController {
             res.status(200).json({ isAvailable });
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -231,7 +231,7 @@ export class BookingController {
             res.status(200).json(booking);
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: error.message || 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 
@@ -246,7 +246,7 @@ export class BookingController {
             res.status(200).json({ success });
         } catch (error: any) {
             console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
 }
