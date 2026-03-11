@@ -20,10 +20,8 @@ export class CreateCourtUseCase {
      * @returns The created Court entity.
      */
     async execute(input: Omit<Court, 'id'>): Promise<Court> {
-        const id = this.idGenerator.generate();
-
         const newCourt = new Court(
-            id,
+            this.idGenerator.generate(),
             input.name,
             input.description,
             input.image,
