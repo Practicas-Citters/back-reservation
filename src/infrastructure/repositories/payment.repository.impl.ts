@@ -3,6 +3,8 @@ import type { PaymentRepository } from "../../domain/repositories/payment.reposi
 import { PaymentModel } from "../models/payment.model.js";
 import { BookingModel } from "../models/booking.model.js";
 import { UserModel } from "../models/user.model.js";
+import { CourtModel } from "../models/court.model.js";
+import { SportModel } from "../models/sport.model.js";
 import { Booking } from "../../domain/entities/booking.entity.js";
 import { Court } from "../../domain/entities/court.entity.js";
 import { Sport } from "../../domain/entities/sport.entity.js";
@@ -25,7 +27,19 @@ export class PaymentRepositoryImpl implements PaymentRepository {
         });
 
         const created = await PaymentModel.findByPk(newPayment.id, {
-            include: [{ model: BookingModel, include: ['court', 'user'] }, UserModel]
+            include: [
+                {
+                    model: BookingModel,
+                    include: [
+                        {
+                            model: CourtModel,
+                            include: [SportModel, UserModel]
+                        },
+                        { model: UserModel }
+                    ]
+                },
+                { model: UserModel }
+            ]
         });
 
         if (!created) throw new Error('Error creating payment');
@@ -37,7 +51,19 @@ export class PaymentRepositoryImpl implements PaymentRepository {
      */
     async getById(id: string): Promise<Payment | null> {
         const payment = await PaymentModel.findByPk(id, {
-            include: [{ model: BookingModel, include: ['court', 'user'] }, UserModel]
+            include: [
+                {
+                    model: BookingModel,
+                    include: [
+                        {
+                            model: CourtModel,
+                            include: [SportModel, UserModel]
+                        },
+                        { model: UserModel }
+                    ]
+                },
+                { model: UserModel }
+            ]
         });
         if (!payment) return null;
         return this.toEntity(payment);
@@ -70,7 +96,19 @@ export class PaymentRepositoryImpl implements PaymentRepository {
     async getAllByBookingId(bookingId: string): Promise<Payment[]> {
         const payments = await PaymentModel.findAll({
             where: { bookingId },
-            include: [{ model: BookingModel, include: ['court', 'user'] }, UserModel]
+            include: [
+                {
+                    model: BookingModel,
+                    include: [
+                        {
+                            model: CourtModel,
+                            include: [SportModel, UserModel]
+                        },
+                        { model: UserModel }
+                    ]
+                },
+                { model: UserModel }
+            ]
         });
         return payments.map(p => this.toEntity(p));
     }
@@ -81,16 +119,33 @@ export class PaymentRepositoryImpl implements PaymentRepository {
     async getAllByUserId(userId: string): Promise<Payment[]> {
         const payments = await PaymentModel.findAll({
             where: { userId },
-            include: [{ model: BookingModel, include: ['court', 'user'] }, UserModel]
+            include: [
+                {
+                    model: BookingModel,
+                    include: [
+                        {
+                            model: CourtModel,
+                            include: [SportModel, UserModel]
+                        },
+                        { model: UserModel }
+                    ]
+                },
+                { model: UserModel }
+            ]
         });
         return payments.map(p => this.toEntity(p));
     }
 
-    /**
-     * Map a PaymentModel (Sequelize) to a Payment domain entity.
-     */
+    //Map a PaymentModel (Sequelize) to a Payment domain entity.
     private toEntity(model: any): Payment {
+        if (!model) throw new Error('Payment model is null');
         const bookingModel = model.booking;
+        if (!bookingModel) throw new Error('Payment booking is null. Ensure "booking" association is included.');
+        if (!bookingModel.court) throw new Error('Payment booking court is null.');
+        if (!bookingModel.court.sport) throw new Error('Payment booking court sport is null.');
+        if (!bookingModel.court.user) throw new Error('Payment booking court owner is null.');
+        if (!bookingModel.user) throw new Error('Payment booking user is null.');
+        if (!model.user) throw new Error('Payment user is null.');
 
         const sport = new Sport(
             bookingModel.court.sport.id,
@@ -147,7 +202,7 @@ export class PaymentRepositoryImpl implements PaymentRepository {
             bookingModel.date,
             bookingModel.startTime,
             bookingModel.endTime,
-            0, // numPeople (placeholder)
+            bookingModel.numPeople,
             bookingModel.totalPrice,
             bookingModel.status,
             null, // payment (related entity)

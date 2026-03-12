@@ -70,7 +70,11 @@ export class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     private toEntity(model: ScheduleModel): Schedule {
+        if (!model) throw new Error('Schedule model is null');
         const courtModel = model.court;
+        if (!courtModel) throw new Error('Schedule court is null. Ensure "court" association is included.');
+        if (!courtModel.sport) throw new Error('Schedule court sport is null. Ensure "sport" association is included for court.');
+        if (!courtModel.user) throw new Error('Schedule court owner is null. Ensure "user" association is included for court.');
 
         const sport = new Sport(
             courtModel.sport.id,
@@ -80,7 +84,7 @@ export class ScheduleRepositoryImpl implements ScheduleRepository {
             courtModel.sport.maxPlayers
         );
 
-        const user = new User(
+        const owner = new User(
             courtModel.user.id,
             courtModel.user.fullName,
             courtModel.user.username,
@@ -103,7 +107,7 @@ export class ScheduleRepositoryImpl implements ScheduleRepository {
             courtModel.pricePerHour,
             courtModel.isAvailable,
             sport,
-            user
+            owner
         );
 
         return new Schedule(

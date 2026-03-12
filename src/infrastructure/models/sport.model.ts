@@ -18,26 +18,26 @@ export class SportModel extends Model {
         allowNull: false,
         unique: true,
     })
-    name!: string;
+    declare name: string;
 
     // iconUrl -> url of the sport icon
     @Column({
         type: DataType.STRING,
         allowNull: false,
     })
-    iconUrl!: string;
+    declare iconUrl: string;
 
     // minPlayers -> minimum players for the sport
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
     })
-    minPlayers!: number;
+    declare minPlayers: number;
 
     // maxPlayers -> maximum players for the sport
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
     })
-    maxPlayers!: number;
+    declare maxPlayers: number;
 }

@@ -8,18 +8,18 @@ import { GetCourtBySportUseCase } from '../../application/use-cases/court/get-by
 import { GetCourtByUserUseCase } from '../../application/use-cases/court/get-by-user.use-case.js';
 import { UpdateCourtUseCase } from '../../application/use-cases/court/update.use-case.js';
 import { DeleteCourtUseCase } from '../../application/use-cases/court/delete.use-case.js';
-import { courtRepository, idGenerator } from '../container.js';
+import { courtRepository, idGenerator, sportRepository, userRepository } from '../container.js';
 
 const router = Router();
 
 // Dependency Injection
-const createCourtUseCase = new CreateCourtUseCase(courtRepository, idGenerator);
+const createCourtUseCase = new CreateCourtUseCase(courtRepository, sportRepository, userRepository, idGenerator);
 const getCourtsUseCase = new GetAllCourtsUseCase(courtRepository);
 const getCourtBySportUseCase = new GetCourtBySportUseCase(courtRepository);
 const getCourtByIdUseCase = new GetCourtByIdUseCase(courtRepository);
 const getCourtByUserUseCase = new GetCourtByUserUseCase(courtRepository);
 const getCourtByNameUseCase = new GetCourtByNameUseCase(courtRepository);
-const updateCourtUseCase = new UpdateCourtUseCase(courtRepository);
+const updateCourtUseCase = new UpdateCourtUseCase(courtRepository, sportRepository, userRepository);
 const deleteCourtUseCase = new DeleteCourtUseCase(courtRepository);
 
 const courtController = new CourtController(createCourtUseCase, getCourtsUseCase,

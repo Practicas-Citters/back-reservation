@@ -18,35 +18,35 @@ export class CourtModel extends Model {
         type: DataType.STRING,
         allowNull: false,
     })
-    name!: string;
+    declare name: string;
 
     // description -> description of the court
     @Column({
         type: DataType.TEXT,
         allowNull: false,
     })
-    description!: string;
+    declare description: string;
 
     // image -> image of the court
     @Column({
         type: DataType.STRING,
         allowNull: false,
     })
-    image!: string;
+    declare image: string;
 
     // capacity -> capacity of the court
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
     })
-    capacity!: number;
+    declare capacity: number;
 
     // pricePerHour -> price per hour of the court
     @Column({
         type: DataType.FLOAT,
         allowNull: false,
     })
-    pricePerHour!: number;
+    declare pricePerHour: number;
 
     // isAvailable -> availability of the court
     @Default(true)
@@ -54,7 +54,7 @@ export class CourtModel extends Model {
         type: DataType.BOOLEAN,
         allowNull: false,
     })
-    isAvailable!: boolean;
+    declare isAvailable: boolean;
 
     // sportId -> id of the sport played on the court
     @ForeignKey(() => SportModel)
@@ -62,10 +62,10 @@ export class CourtModel extends Model {
         type: DataType.UUID,
         allowNull: false,
     })
-    sportId!: string;
+    declare sportId: string;
 
     @BelongsTo(() => SportModel)
-    sport!: SportModel;
+    declare sport: SportModel;
 
     // userId -> id of the user who created the court
     @ForeignKey(() => UserModel)
@@ -73,8 +73,8 @@ export class CourtModel extends Model {
         type: DataType.UUID,
         allowNull: false,
     })
-    userId!: string;
+    declare userId: string;
 
     @BelongsTo(() => UserModel)
-    user!: UserModel;
+    declare user: UserModel;
 }

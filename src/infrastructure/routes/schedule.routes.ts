@@ -6,11 +6,11 @@ import { GetByCourtUseCase } from '../../application/use-cases/schedule/get-by-c
 import { DeleteUseCase } from '../../application/use-cases/schedule/delete.use-case.js';
 import { GetByIdUseCase } from '../../application/use-cases/schedule/get-by-id.use-case.js';
 import { UpdateUseCase } from '../../application/use-cases/schedule/update.use-case.js';
-import { scheduleRepository } from '../container.js';
+import { scheduleRepository, courtRepository, idGenerator } from '../container.js';
 
 const router = Router();
 
-const createUseCase = new CreateUseCase(scheduleRepository);
+const createUseCase = new CreateUseCase(scheduleRepository, courtRepository, idGenerator);
 const getByCourtUseCase = new GetByCourtUseCase(scheduleRepository);
 const deleteUseCase = new DeleteUseCase(scheduleRepository);
 const getByIdUseCase = new GetByIdUseCase(scheduleRepository);

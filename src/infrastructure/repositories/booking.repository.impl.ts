@@ -308,15 +308,16 @@ export class BookingRepositoryImpl implements BookingRepository {
         return overlappingCount === 0;
     }
 
-    /**
-     * Map a BookingModel (Sequelize) to a Booking domain entity.
-     * Recursively maps related User, Court, Sport, and Owner models.
-     */
+    //Map a BookingModel (Sequelize) to a Booking domain entity.
     private toEntity(model: BookingModel): Booking {
+        if (!model) throw new Error('Booking model is null');
+        if (!model.user) throw new Error('Booking user is null. Ensure "user" association is included.');
+        if (!model.court) throw new Error('Booking court is null. Ensure "court" association is included.');
+
         return new Booking(
             model.id,
-            this.userToEntity(model.user!),
-            this.courtToEntity(model.court!),
+            this.userToEntity(model.user),
+            this.courtToEntity(model.court),
             model.date,
             model.startTime,
             model.endTime,
@@ -331,6 +332,7 @@ export class BookingRepositoryImpl implements BookingRepository {
 
     //Map a UserModel to a User domain entity.
     private userToEntity(model: UserModel): User {
+        if (!model) throw new Error('User model is null');
         return new User(
             model.id,
             model.fullName,
@@ -348,6 +350,10 @@ export class BookingRepositoryImpl implements BookingRepository {
 
     //Map a CourtModel to a Court domain entity.
     private courtToEntity(model: CourtModel): Court {
+        if (!model) throw new Error('Court model is null');
+        if (!model.sport) throw new Error('Court sport is null. Ensure "sport" association is included.');
+        if (!model.user) throw new Error('Court owner is null. Ensure "user" association is included for court.');
+
         return new Court(
             model.id,
             model.name,
@@ -363,6 +369,7 @@ export class BookingRepositoryImpl implements BookingRepository {
 
     //Map a SportModel to a Sport domain entity.
     private sportToEntity(model: SportModel): Sport {
+        if (!model) throw new Error('Sport model is null');
         return new Sport(
             model.id,
             model.name,
