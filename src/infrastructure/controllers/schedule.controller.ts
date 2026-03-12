@@ -23,10 +23,9 @@ export class ScheduleController {
 
     async create(req: Request, res: Response) {
         try {
-            const { id, court, dayOfWeek, startTime, endTime } = req.body;
+            const { courtId, dayOfWeek, startTime, endTime } = req.body;
             const schedule = await this.createUseCase.execute({
-                id,
-                court,
+                courtId,
                 dayOfWeek,
                 startTime,
                 endTime

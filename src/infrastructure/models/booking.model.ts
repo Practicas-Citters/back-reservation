@@ -20,10 +20,10 @@ export class BookingModel extends Model {
         type: DataType.UUID,
         allowNull: false,
     })
-    userId!: string;
+    declare userId: string;
 
     @BelongsTo(() => UserModel)
-    user!: UserModel;
+    declare user: UserModel;
 
     // court_id -> id of the court where the booking is made
     @ForeignKey(() => CourtModel)
@@ -31,45 +31,45 @@ export class BookingModel extends Model {
         type: DataType.UUID,
         allowNull: false,
     })
-    courtId!: string;
+    declare courtId: string;
 
     @BelongsTo(() => CourtModel)
-    court!: CourtModel;
+    declare court: CourtModel;
 
     // date -> date of the booking
     @Column({
         type: DataType.DATEONLY,
         allowNull: false,
     })
-    date!: string;
+    declare date: string;
 
     // start_time -> start time of the booking
     @Column({
         type: DataType.STRING,
         allowNull: false,
     })
-    startTime!: string;
+    declare startTime: string;
 
     // end_time -> end time of the booking
     @Column({
         type: DataType.STRING,
         allowNull: false,
     })
-    endTime!: string;
+    declare endTime: string;
 
     // num_people -> number of people who made the booking
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
     })
-    numPeople!: number;
+    declare numPeople: number;
 
     // total_price -> total price of the booking
     @Column({
         type: DataType.FLOAT,
         allowNull: false,
     })
-    totalPrice!: number;
+    declare totalPrice: number;
 
     // status -> status of the booking
     @Column({
@@ -77,5 +77,5 @@ export class BookingModel extends Model {
         allowNull: false,
         defaultValue: BookingStatus.PENDING,
     })
-    status!: BookingStatus;
+    declare status: BookingStatus;
 }

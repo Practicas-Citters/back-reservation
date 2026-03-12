@@ -17,45 +17,45 @@ export class PaymentModel extends Model {
         type: DataType.DECIMAL(10, 2),
         allowNull: false,
     })
-    amount!: number;
+    declare amount: number;
 
     @Column({
         type: DataType.ENUM(...Object.values(PaymentStatus)),
         allowNull: false,
         defaultValue: PaymentStatus.PENDING,
     })
-    status!: PaymentStatus;
+    declare status: PaymentStatus;
 
     @Column({
         type: DataType.ENUM(...Object.values(PaymentMethod)),
         allowNull: false,
     })
-    method!: PaymentMethod;
+    declare method: PaymentMethod;
 
     @Column({
         type: DataType.STRING,
         allowNull: true,
     })
-    transactionId!: string | null;
+    declare transactionId: string | null;
 
     @ForeignKey(() => UserModel)
     @Column({
         type: DataType.UUID,
         allowNull: false,
     })
-    userId!: string;
+    declare userId: string;
 
     @BelongsTo(() => UserModel)
-    user!: UserModel;
+    declare user: UserModel;
 
     @ForeignKey(() => BookingModel)
     @Column({
         type: DataType.UUID,
         allowNull: false,
     })
-    bookingId!: string;
+    declare bookingId: string;
 
     @BelongsTo(() => BookingModel)
-    booking!: BookingModel;
+    declare booking: BookingModel;
 }
 

@@ -30,14 +30,14 @@ export class PaymentController {
     // Create a new payment record
     async create(req: Request, res: Response) {
         try {
-            const { amount, method, userId, booking } = req.body;
+            const { amount, method, userId, bookingId } = req.body;
 
             // In a real case, we would validate the data here (INPUT)
             const payment = await this.createPaymentUseCase.execute({
                 amount,
                 method,
                 userId,
-                booking
+                bookingId
             });
 
             res.status(201).json(payment);

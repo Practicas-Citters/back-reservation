@@ -12,12 +12,19 @@ export interface UpdateCourtInput {
     userId?: string;
 }
 
+import type { SportRepository } from "../../../domain/repositories/sport.domain.repository.js";
+import type { UserRepository } from "../../../domain/repositories/user.domain.repository.js";
+
 /**
  * Use Case to update an existing court.
  * Updates only the fields provided in the INPUT.
  */
 export class UpdateCourtUseCase {
-    constructor(private readonly courtRepository: CourtRepository) { }
+    constructor(
+        private readonly courtRepository: CourtRepository,
+        private readonly sportRepository: SportRepository,
+        private readonly userRepository: UserRepository,
+    ) { }
 
     /**
      * Executes the update process.
@@ -43,6 +50,22 @@ export class UpdateCourtUseCase {
         if (input.capacity !== undefined) court.capacity = input.capacity;
         if (input.pricePerHour !== undefined) court.pricePerHour = input.pricePerHour;
         if (input.isAvailable !== undefined) court.isAvailable = input.isAvailable;
+
+        if (input.sportId !== undefined) {
+            const sport = await this.sportRepository.getById(input.sportId);
+            if (!sport) {
+                throw new Error(`Sport with id ${input.sportId} not found`);
+            }
+            court.sport = sport;
+        }
+
+        if (input.userId !== undefined) {
+            const user = await this.userRepository.getById(input.userId);
+            if (!user) {
+                throw new Error(`User with id ${input.userId} not found`);
+            }
+            court.user = user;
+        }
 
         return this.courtRepository.update(id, court);
     }

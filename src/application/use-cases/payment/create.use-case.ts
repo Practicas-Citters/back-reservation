@@ -1,23 +1,29 @@
 import { Payment, PaymentStatus, PaymentMethod } from "../../../domain/entities/payment.entity.js";
 import type { PaymentRepository } from "../../../domain/repositories/payment.repository.js";
-import type { Booking } from "../../../domain/entities/booking.entity.js";
+import type { BookingRepository } from "../../../domain/repositories/booking.domain.repository.js";
 
 // Use case to create a payment
 
-interface CreatePaymentInput {
+export interface CreatePaymentInput {
     amount: number;
     method: PaymentMethod;
     userId: string;
-    booking: Booking;
+    bookingId: string;
 }
 
 export class CreatePaymentUseCase {
     constructor(
-        private paymentRepository: PaymentRepository,
-        private idGenerator: { generate(): string }
+        private readonly paymentRepository: PaymentRepository,
+        private readonly bookingRepository: BookingRepository,
+        private readonly idGenerator: { generate(): string }
     ) { }
 
     async execute(input: CreatePaymentInput): Promise<Payment> {
+        const booking = await this.bookingRepository.getById(input.bookingId);
+        if (!booking) {
+            throw new Error(`Booking with id ${input.bookingId} not found`);
+        }
+
         const payment = new Payment(
             this.idGenerator.generate(),
             input.amount,
@@ -25,7 +31,7 @@ export class CreatePaymentUseCase {
             input.method,
             null, // Initial transactionId
             input.userId,
-            input.booking,
+            booking,
             new Date().toISOString()
         );
 

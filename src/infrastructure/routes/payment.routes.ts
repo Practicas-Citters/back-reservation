@@ -7,12 +7,12 @@ import { GetBookingPaymentsUseCase } from '../../application/use-cases/payment/g
 import { UpdatePaymentUseCase } from '../../application/use-cases/payment/update-payment.use-case.js';
 import { RefundPaymentUseCase } from '../../application/use-cases/payment/refund-payment.use-case.js';
 import { DeletePaymentUseCase } from '../../application/use-cases/payment/delete-payment.use-case.js';
-import { paymentRepository, idGenerator } from '../container.js';
+import { paymentRepository, idGenerator, bookingRepository } from '../container.js';
 
 const router = Router();
 
 // Dependency injection
-const createPaymentUseCase = new CreatePaymentUseCase(paymentRepository, idGenerator);
+const createPaymentUseCase = new CreatePaymentUseCase(paymentRepository, bookingRepository, idGenerator);
 const getPaymentHistoryUseCase = new GetPaymentHistoryUseCase(paymentRepository);
 const getPaymentByIdUseCase = new GetPaymentByIdUseCase(paymentRepository);
 const getBookingPaymentsUseCase = new GetBookingPaymentsUseCase(paymentRepository);

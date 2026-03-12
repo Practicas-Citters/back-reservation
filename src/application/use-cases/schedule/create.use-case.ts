@@ -1,24 +1,37 @@
-
 import { Schedule } from "../../../domain/entities/schedule.entity.js";
 import type { ScheduleRepository } from "../../../domain/repositories/schedule.domain.repository.js";
-import type { Court } from "../../../domain/entities/court.entity.js";
+import type { CourtRepository } from "../../../domain/repositories/court.domain.repository.js";
 import { DayOfWeek } from "../../../domain/entities/schedule.entity.js";
 
-interface CreateScheduleInput {
-    id: string;
-    court: Court;
+interface IdGenerator {
+    generate(): string;
+}
+
+interface CreateUseCaseInput {
+    courtId: string;
     dayOfWeek: DayOfWeek;
     startTime: string;
     endTime: string;
 }
 
 export class CreateUseCase {
-    constructor(private scheduleRepository: ScheduleRepository) { }
+    constructor(
+        private scheduleRepository: ScheduleRepository,
+        private courtRepository: CourtRepository,
+        private idGenerator: IdGenerator
+    ) { }
 
-    async execute(input: CreateScheduleInput): Promise<Schedule> {
+    async execute(input: CreateUseCaseInput): Promise<Schedule> {
+        const court = await this.courtRepository.getById(input.courtId);
+        if (!court) {
+            throw new Error(`Court with id ${input.courtId} not found`);
+        }
+
+        const id = this.idGenerator.generate();
+
         const schedule = new Schedule(
-            input.id,
-            input.court,
+            id,
+            court,
             input.dayOfWeek,
             input.startTime,
             input.endTime

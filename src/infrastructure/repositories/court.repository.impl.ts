@@ -128,6 +128,8 @@ export class CourtRepositoryImpl implements CourtRepository {
 
     //Map a CourtModel (Sequelize) to a Court domain entity.
     private toEntity(model: CourtModel): Court {
+        if (!model) throw new Error('Court model is null');
+        
         return new Court(
             model.id,
             model.name,
@@ -143,6 +145,9 @@ export class CourtRepositoryImpl implements CourtRepository {
 
     //Map a SportModel to a Sport domain entity.
     private sportToEntity(model: SportModel): Sport {
+        if (!model) {
+             throw new Error('Associated Sport model is null. Ensure Sport association is included in the query.');
+        }
         return new Sport(
             model.id,
             model.name,
@@ -154,6 +159,9 @@ export class CourtRepositoryImpl implements CourtRepository {
 
     //Map a UserModel to a User domain entity.
     private userToEntity(model: UserModel): User {
+        if (!model) {
+            throw new Error('Associated User model is null. Ensure User association is included in the query.');
+        }
         return new User(
             model.id,
             model.fullName,

@@ -45,5 +45,5 @@ export class ScheduleModel extends Model {
     declare courtId: string;
 
     @BelongsTo(() => CourtModel)
-    court!: CourtModel;
+    declare court: CourtModel;
 }
