@@ -15,7 +15,7 @@ const router = Router();
 
 // Dependency injection
 const createUseCase = new CreateUseCase(userRepository, passwordHasher, idGenerator);
-const updateUseCase = new UpdateUseCase(userRepository);
+const updateUseCase = new UpdateUseCase(userRepository, passwordHasher);
 const deleteUseCase = new DeleteUseCase(userRepository);
 const getAllUseCase = new GetAllUseCase(userRepository);
 const getByEmailUseCase = new GetByEmailUseCase(userRepository);
