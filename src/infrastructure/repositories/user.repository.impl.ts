@@ -72,7 +72,7 @@ export class UserRepositoryImpl implements UserRepository {
     /**
      * Retrieve users based on their premium status.
      */
-    async getByIsPremium(isPremium: boolean): Promise<User[] | null> {
+    async getByPremiumStatus(isPremium: boolean): Promise<User[] | null> {
         const user = await UserModel.findAll({ where: { isPremium } });
         if (!user) return null;
         return user.map(u => this.toEntity(u));

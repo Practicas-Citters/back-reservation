@@ -6,7 +6,7 @@ import { DeleteUseCase } from '../../application/use-cases/user/delete.use-case.
 import { GetAllUseCase } from '../../application/use-cases/user/get-all.use-case.js';
 import { GetByEmailUseCase } from '../../application/use-cases/user/get-by-email.use-case.js';
 import { GetByIdUseCase } from '../../application/use-cases/user/get-by-id.use-case.js';
-import { GetByIsPremiumUseCase } from '../../application/use-cases/user/get-by-is-premium.use-case.js';
+import { GetByPremiumStatusUseCase } from '../../application/use-cases/user/get-by-premium-status.use-case.js';
 import { GetByRoleUseCase } from '../../application/use-cases/user/get-by-role.use-case.js';
 import { GetByUsernameUseCase } from '../../application/use-cases/user/get-by-username.use-case.js';
 
@@ -18,7 +18,7 @@ export class UserController {
         private getAllUseCase: GetAllUseCase,
         private getByEmailUseCase: GetByEmailUseCase,
         private getByIdUseCase: GetByIdUseCase,
-        private getByIsPremiumUseCase: GetByIsPremiumUseCase,
+        private getByPremiumStatusUseCase: GetByPremiumStatusUseCase,
         private getByRoleUseCase: GetByRoleUseCase,
         private getByUsernameUseCase: GetByUsernameUseCase
     ) {
@@ -28,7 +28,7 @@ export class UserController {
         this.getAll = this.getAll.bind(this);
         this.getById = this.getById.bind(this);
         this.getByEmail = this.getByEmail.bind(this);
-        this.getByIsPremium = this.getByIsPremium.bind(this);
+        this.getByPremiumStatus = this.getByPremiumStatus.bind(this);
         this.getByRole = this.getByRole.bind(this);
         this.getByUsername = this.getByUsername.bind(this);
     }
@@ -225,7 +225,7 @@ export class UserController {
      * Get users by Is Premium status.
      * Expects 'isPremium' as 'true' or 'false' in the route parameters.
      */
-    async getByIsPremium(req: Request, res: Response) {
+    async getByPremiumStatus(req: Request, res: Response) {
         try {
             const { isPremium } = req.params;
 
@@ -236,11 +236,7 @@ export class UserController {
 
             const isPremiumBool = isPremium === 'true';
 
-            const users = await this.getByIsPremiumUseCase.execute(isPremiumBool);
-            if (!users || users.length === 0) {
-                res.status(404).json({ error: 'Users not found' });
-                return;
-            }
+            const users = await this.getByPremiumStatusUseCase.execute(isPremiumBool);
             res.status(200).json(users);
         } catch (error: any) {
             console.error(error);
