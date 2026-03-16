@@ -8,11 +8,11 @@ import type { PaymentRepository } from "../../../domain/repositories/payment.rep
 export class GetPaymentByIdUseCase {
     constructor(private paymentRepository: PaymentRepository) { }
 
-    async execute(paymentId: string): Promise<Payment> {
-        const payment = await this.paymentRepository.getById(paymentId);
+    async execute(id: string): Promise<Payment> {
+        const payment = await this.paymentRepository.getById(id);
 
         if (!payment) {
-            throw new Error(`Payment with id ${paymentId} not found`);
+            throw new Error(`Payment with id ${id} not found`);
         }
 
         return payment;

@@ -7,6 +7,6 @@ export class GetPaymentHistoryUseCase {
     constructor(private paymentRepository: PaymentRepository) { }
 
     async execute(userId: string): Promise<Payment[]> {
-        return await this.paymentRepository.getAllByUserId(userId);
+        return await this.paymentRepository.getByUserId(userId);
     }
 }

@@ -5,23 +5,23 @@ import { PaymentStatus, Payment } from "../../../domain/entities/payment.entity.
 export class RefundPaymentUseCase {
     constructor(private paymentRepository: PaymentRepository) { }
 
-    async execute(paymentId: string): Promise<Payment> {
-        const payment = await this.paymentRepository.getById(paymentId);
+    async execute(id: string): Promise<Payment> {
+        const payment = await this.paymentRepository.getById(id);
 
         if (!payment) {
-            throw new Error(`Payment with ID ${paymentId} not found`);
+            throw new Error(`Payment with ID ${id} not found`);
         }
 
         if (payment.status !== PaymentStatus.COMPLETED) {
             throw new Error(`Only completed payments can be refunded. Current status: ${payment.status}`);
         }
 
-        const updatedPayment = await this.paymentRepository.update(paymentId, {
+        const updatedPayment = await this.paymentRepository.update(id, {
             status: PaymentStatus.REFUNDED
         });
 
         if (!updatedPayment) {
-            throw new Error(`Failed to update payment status for ID ${paymentId}`);
+            throw new Error(`Failed to update payment status for ID ${id}`);
         }
 
         return updatedPayment;

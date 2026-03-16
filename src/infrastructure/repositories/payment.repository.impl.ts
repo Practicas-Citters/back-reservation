@@ -1,4 +1,4 @@
-import { Payment } from "../../domain/entities/payment.entity.js";
+import { Payment, PaymentStatus, PaymentMethod } from "../../domain/entities/payment.entity.js";
 import type { PaymentRepository } from "../../domain/repositories/payment.repository.js";
 import { PaymentModel } from "../models/payment.model.js";
 import { BookingModel } from "../models/booking.model.js";
@@ -91,9 +91,31 @@ export class PaymentRepositoryImpl implements PaymentRepository {
     }
 
     /**
+     * Get all payments from the database.
+     */
+    async getAll(): Promise<Payment[]> {
+        const payments = await PaymentModel.findAll({
+            include: [
+                {
+                    model: BookingModel,
+                    include: [
+                        {
+                            model: CourtModel,
+                            include: [SportModel, UserModel]
+                        },
+                        { model: UserModel }
+                    ]
+                },
+                { model: UserModel }
+            ]
+        });
+        return payments.map(p => this.toEntity(p));
+    }
+
+    /**
      * Get all payments associated with a specific booking ID.
      */
-    async getAllByBookingId(bookingId: string): Promise<Payment[]> {
+    async getByBookingId(bookingId: string): Promise<Payment[]> {
         const payments = await PaymentModel.findAll({
             where: { bookingId },
             include: [
@@ -116,9 +138,55 @@ export class PaymentRepositoryImpl implements PaymentRepository {
     /**
      * Get all payments associated with a specific user ID.
      */
-    async getAllByUserId(userId: string): Promise<Payment[]> {
+    async getByUserId(userId: string): Promise<Payment[]> {
         const payments = await PaymentModel.findAll({
             where: { userId },
+            include: [
+                {
+                    model: BookingModel,
+                    include: [
+                        {
+                            model: CourtModel,
+                            include: [SportModel, UserModel]
+                        },
+                        { model: UserModel }
+                    ]
+                },
+                { model: UserModel }
+            ]
+        });
+        return payments.map(p => this.toEntity(p));
+    }
+
+    /**
+     * Get all payments with a specific status.
+     */
+    async getByStatus(status: PaymentStatus): Promise<Payment[]> {
+        const payments = await PaymentModel.findAll({
+            where: { status },
+            include: [
+                {
+                    model: BookingModel,
+                    include: [
+                        {
+                            model: CourtModel,
+                            include: [SportModel, UserModel]
+                        },
+                        { model: UserModel }
+                    ]
+                },
+                { model: UserModel }
+            ]
+        });
+        return payments.map(p => this.toEntity(p));
+    }
+
+    /**
+     * Get all payments with a specific payment method.
+     */
+    async getByMethod(method: PaymentMethod): Promise<Payment[]> {
+        const payments = await PaymentModel.findAll({
+            where: { method },
             include: [
                 {
                     model: BookingModel,
