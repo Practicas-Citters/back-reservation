@@ -69,6 +69,59 @@ export class ScheduleRepositoryImpl implements ScheduleRepository {
         return scheduleModels.map(model => this.toEntity(model));
     }
 
+    async getAll(): Promise<Schedule[]> {
+        const scheduleModels = await ScheduleModel.findAll({
+            include: [{
+                model: CourtModel,
+                include: [SportModel, UserModel]
+            }]
+        });
+
+        return scheduleModels.map(model => this.toEntity(model));
+    }
+
+    async getByDayOfWeek(dayOfWeek: DayOfWeek): Promise<Schedule[]> {
+        const scheduleModels = await ScheduleModel.findAll({
+            where: { dayOfWeek },
+            include: [{
+                model: CourtModel,
+                include: [SportModel, UserModel]
+            }]
+        });
+
+        return scheduleModels.map(model => this.toEntity(model));
+    }
+
+    async getByDayOfWeekAndCourtId(dayOfWeek: DayOfWeek, courtId: string): Promise<Schedule[]> {
+        const scheduleModels = await ScheduleModel.findAll({
+            where: { dayOfWeek, courtId },
+            include: [{
+                model: CourtModel,
+                include: [SportModel, UserModel]
+            }]
+        });
+
+        return scheduleModels.map(model => this.toEntity(model));
+    }
+
+    async getByCourtIdAndDate(courtId: string, date: Date): Promise<Schedule[]> {
+        const dayOfWeek = this.mapDateToDayOfWeek(date);
+        return this.getByDayOfWeekAndCourtId(dayOfWeek, courtId);
+    }
+
+    private mapDateToDayOfWeek(date: Date): DayOfWeek {
+        const days = [
+            DayOfWeek.SUNDAY,
+            DayOfWeek.MONDAY,
+            DayOfWeek.TUESDAY,
+            DayOfWeek.WEDNESDAY,
+            DayOfWeek.THURSDAY,
+            DayOfWeek.FRIDAY,
+            DayOfWeek.SATURDAY
+        ];
+        return days[date.getDay()]!;
+    }
+
     private toEntity(model: ScheduleModel): Schedule {
         if (!model) throw new Error('Schedule model is null');
         const courtModel = model.court;
