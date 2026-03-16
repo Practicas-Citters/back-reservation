@@ -9,6 +9,7 @@ export class Court {
         public image: string,
         public capacity: number,
         public pricePerHour: number,
+        public location: string,
         public isAvailable: boolean,
         public sport: Sport,
         public user: User

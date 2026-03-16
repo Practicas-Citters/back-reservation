@@ -3,6 +3,7 @@ import { CreateCourtUseCase } from '../../application/use-cases/court/create.use
 import { GetAllCourtsUseCase } from '../../application/use-cases/court/get-all.use-case.js';
 import { GetCourtBySportUseCase } from '../../application/use-cases/court/get-by-sport.use-case.js';
 import { GetCourtByIdUseCase } from '../../application/use-cases/court/get-by-id.use-case.js';
+import { GetCourtByLocationUseCase } from '../../application/use-cases/court/get-by-location.use-case.js';
 import { GetCourtByUserUseCase } from '../../application/use-cases/court/get-by-user.use-case.js';
 import { GetCourtByNameUseCase } from '../../application/use-cases/court/get-by-name.use-case.js';
 import { UpdateCourtUseCase } from '../../application/use-cases/court/update.use-case.js';
@@ -15,6 +16,7 @@ export class CourtController {
         private readonly getCourtsUseCase: GetAllCourtsUseCase,
         private readonly getCourtBySportUseCase: GetCourtBySportUseCase,
         private readonly getCourtByIdUseCase: GetCourtByIdUseCase,
+        private readonly getCourtByLocationUseCase: GetCourtByLocationUseCase,
         private readonly getCourtByUserUseCase: GetCourtByUserUseCase,
         private readonly getCourtByNameUseCase: GetCourtByNameUseCase,
         private readonly updateCourtUseCase: UpdateCourtUseCase,
@@ -24,6 +26,7 @@ export class CourtController {
         this.getAll = this.getAll.bind(this);
         this.getBySport = this.getBySport.bind(this);
         this.getById = this.getById.bind(this);
+        this.getByLocation = this.getByLocation.bind(this);
         this.getByUser = this.getByUser.bind(this);
         this.getByName = this.getByName.bind(this);
         this.update = this.update.bind(this);
@@ -92,6 +95,29 @@ export class CourtController {
                 return;
             }
             const court = await this.getCourtByNameUseCase.execute(name);
+            if (!court) {
+                res.status(404).json({ error: 'Court not found' });
+                return;
+            }
+            res.status(200).json(court);
+        } catch (error: any) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
+        }
+    }
+
+    /**
+     * Get a court by its location
+     * Expects 'location' in the route parameters
+     */
+    async getByLocation(req: Request, res: Response) {
+        try {
+            const { location } = req.params;
+            if (!location || typeof location !== 'string') {
+                res.status(400).json({ error: 'Invalid location' });
+                return;
+            }
+            const court = await this.getCourtByLocationUseCase.execute(location);
             if (!court) {
                 res.status(404).json({ error: 'Court not found' });
                 return;

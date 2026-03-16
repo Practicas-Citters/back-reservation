@@ -48,6 +48,13 @@ export class CourtModel extends Model {
     })
     declare pricePerHour: number;
 
+    // location -> location of the court
+    @Column({
+        type: DataType.STRING,
+        allowNull: false,
+    })
+    declare location: string;
+
     // isAvailable -> availability of the court
     @Default(true)
     @Column({
