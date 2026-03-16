@@ -13,5 +13,5 @@ export interface UserRepository {
     getAll(): Promise<User[]>;
     getByRole(role: UserRole): Promise<User[] | null>;
     getByUsername(username: string): Promise<User | null>;
-    getByIsPremium(isPremium: boolean): Promise<User[] | null>;
+    getByPremiumStatus(isPremium: boolean): Promise<User[] | null>;
 }
