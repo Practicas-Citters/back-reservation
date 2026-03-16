@@ -3,9 +3,11 @@ import { CreatePaymentUseCase } from '../../application/use-cases/payment/create
 import { GetPaymentHistoryUseCase } from '../../application/use-cases/payment/get-history.use-case.js';
 import { GetPaymentByIdUseCase } from '../../application/use-cases/payment/get-by-id.use-case.js';
 import { GetBookingPaymentsUseCase } from '../../application/use-cases/payment/get-by-booking.use-case.js';
-import { UpdatePaymentUseCase } from '../../application/use-cases/payment/update-payment.use-case.js';
-import { RefundPaymentUseCase } from '../../application/use-cases/payment/refund-payment.use-case.js';
-import { DeletePaymentUseCase } from '../../application/use-cases/payment/delete-payment.use-case.js';
+import { UpdatePaymentUseCase } from '../../application/use-cases/payment/update.use-case.js';
+import { RefundPaymentUseCase } from '../../application/use-cases/payment/refund.use-case.js';
+import { DeletePaymentUseCase } from '../../application/use-cases/payment/delete.use-case.js';
+import { GetPaymentsByStatusUseCase } from '../../application/use-cases/payment/get-by-status.use-case.js';
+import { GetPaymentsByMethodUseCase } from '../../application/use-cases/payment/get-by-method.use-case.js';
 
 export class PaymentController {
     constructor(
@@ -15,16 +17,20 @@ export class PaymentController {
         private getBookingPaymentsUseCase: GetBookingPaymentsUseCase,
         private updatePaymentUseCase: UpdatePaymentUseCase,
         private refundPaymentUseCase: RefundPaymentUseCase,
-        private deletePaymentUseCase: DeletePaymentUseCase
+        private deletePaymentUseCase: DeletePaymentUseCase,
+        private getPaymentsByStatusUseCase: GetPaymentsByStatusUseCase,
+        private getPaymentsByMethodUseCase: GetPaymentsByMethodUseCase
 
     ) {
         this.create = this.create.bind(this);
         this.getHistory = this.getHistory.bind(this);
         this.getById = this.getById.bind(this);
-        this.getBookingPayments = this.getBookingPayments.bind(this);
+        this.getByBooking = this.getByBooking.bind(this);
         this.update = this.update.bind(this);
         this.refund = this.refund.bind(this);
         this.delete = this.delete.bind(this);
+        this.getByStatus = this.getByStatus.bind(this);
+        this.getByMethod = this.getByMethod.bind(this);
     }
 
     // Create a new payment record
@@ -85,7 +91,7 @@ export class PaymentController {
     }
 
     // Get all payments associated with a booking
-    async getBookingPayments(req: Request, res: Response) {
+    async getByBooking(req: Request, res: Response) {
         try {
             const { bookingId } = req.params;
 
@@ -103,6 +109,7 @@ export class PaymentController {
             }
         }
     }
+
     // Update payment status or transaction details
     async update(req: Request, res: Response) {
         try {
@@ -121,6 +128,7 @@ export class PaymentController {
             res.status(404).json({ error: error.message || 'Payment update failed' });
         }
     }
+
     // Process a refund for a completed payment
     async refund(req: Request, res: Response) {
         try {
@@ -143,7 +151,31 @@ export class PaymentController {
             res.status(204).send();
         } catch (error: any) {
             console.error(error);
-            res.status(404).json({ error: error.message || 'Payment not found' });
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    // Get payments by status
+    async getByStatus(req: Request, res: Response) {
+        try {
+            const { status } = req.params;
+            const payments = await this.getPaymentsByStatusUseCase.execute(status as any);
+            res.json(payments);
+        } catch (error: any) {
+            console.error(error);
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    // Get payments by method
+    async getByMethod(req: Request, res: Response) {
+        try {
+            const { method } = req.params;
+            const payments = await this.getPaymentsByMethodUseCase.execute(method as any);
+            res.json(payments);
+        } catch (error: any) {
+            console.error(error);
+            res.status(500).json({ error: error.message });
         }
     }
 }
