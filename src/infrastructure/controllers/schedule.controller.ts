@@ -5,6 +5,11 @@ import { GetByCourtUseCase } from '../../application/use-cases/schedule/get-by-c
 import { DeleteUseCase } from '../../application/use-cases/schedule/delete.use-case.js';
 import { GetByIdUseCase } from '../../application/use-cases/schedule/get-by-id.use-case.js';
 import { UpdateUseCase } from '../../application/use-cases/schedule/update.use-case.js';
+import { GetAllUseCase } from '../../application/use-cases/schedule/get-all.use-case.js';
+import { GetByDayOfWeekUseCase } from '../../application/use-cases/schedule/get-by-day-of-week.use-case.js';
+import { GetByDayOfWeekAndCourtUseCase } from '../../application/use-cases/schedule/get-by-day-of-week-and-court.use-case.js';
+import { GetByCourtAndDateUseCase } from '../../application/use-cases/schedule/get-by-court-and-date.use-case.js';
+import { DayOfWeek } from '../../domain/entities/schedule.entity.js';
 
 export class ScheduleController {
     constructor(
@@ -12,13 +17,21 @@ export class ScheduleController {
         private getByCourtUseCase: GetByCourtUseCase,
         private deleteUseCase: DeleteUseCase,
         private getByIdUseCase: GetByIdUseCase,
-        private updateUseCase: UpdateUseCase
+        private updateUseCase: UpdateUseCase,
+        private getAllUseCase: GetAllUseCase,
+        private getByDayOfWeekUseCase: GetByDayOfWeekUseCase,
+        private getByDayOfWeekAndCourtUseCase: GetByDayOfWeekAndCourtUseCase,
+        private getByCourtAndDateUseCase: GetByCourtAndDateUseCase
     ) {
         this.create = this.create.bind(this);
         this.getByCourtId = this.getByCourtId.bind(this);
         this.delete = this.delete.bind(this);
         this.getById = this.getById.bind(this);
         this.update = this.update.bind(this);
+        this.getAll = this.getAll.bind(this);
+        this.getByDayOfWeek = this.getByDayOfWeek.bind(this);
+        this.getByDayOfWeekAndCourtId = this.getByDayOfWeekAndCourtId.bind(this);
+        this.getByCourtIdAndDate = this.getByCourtIdAndDate.bind(this);
     }
 
     async create(req: Request, res: Response) {
@@ -86,6 +99,49 @@ export class ScheduleController {
             if (error.message.includes('not found')) {
                 return res.status(404).json({ error: error.message });
             }
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
+        }
+    }
+
+    async getAll(req: Request, res: Response) {
+        try {
+            const schedules = await this.getAllUseCase.execute();
+            res.status(200).json(schedules);
+        } catch (error: any) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
+        }
+    }
+
+    async getByDayOfWeek(req: Request, res: Response) {
+        try {
+            const { dayOfWeek } = req.params;
+            const schedules = await this.getByDayOfWeekUseCase.execute(dayOfWeek as DayOfWeek);
+            res.status(200).json(schedules);
+        } catch (error: any) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
+        }
+    }
+
+    async getByDayOfWeekAndCourtId(req: Request, res: Response) {
+        try {
+            const { dayOfWeek, courtId } = req.params;
+            const schedules = await this.getByDayOfWeekAndCourtUseCase.execute(dayOfWeek as DayOfWeek, courtId as string);
+            res.status(200).json(schedules);
+        } catch (error: any) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
+        }
+    }
+
+    async getByCourtIdAndDate(req: Request, res: Response) {
+        try {
+            const { courtId, date } = req.params;
+            const schedules = await this.getByCourtAndDateUseCase.execute(courtId as string, new Date(date as string));
+            res.status(200).json(schedules);
+        } catch (error: any) {
+            console.error(error);
             res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
