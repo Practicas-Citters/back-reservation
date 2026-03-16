@@ -4,6 +4,7 @@ import { CreateCourtUseCase } from '../../application/use-cases/court/create.use
 import { GetAllCourtsUseCase } from '../../application/use-cases/court/get-all.use-case.js';
 import { GetCourtByIdUseCase } from '../../application/use-cases/court/get-by-id.use-case.js';
 import { GetCourtByNameUseCase } from '../../application/use-cases/court/get-by-name.use-case.js';
+import { GetCourtByLocationUseCase } from '../../application/use-cases/court/get-by-location.use-case.js';
 import { GetCourtBySportUseCase } from '../../application/use-cases/court/get-by-sport.use-case.js';
 import { GetCourtByUserUseCase } from '../../application/use-cases/court/get-by-user.use-case.js';
 import { UpdateCourtUseCase } from '../../application/use-cases/court/update.use-case.js';
@@ -17,19 +18,21 @@ const createCourtUseCase = new CreateCourtUseCase(courtRepository, sportReposito
 const getCourtsUseCase = new GetAllCourtsUseCase(courtRepository);
 const getCourtBySportUseCase = new GetCourtBySportUseCase(courtRepository);
 const getCourtByIdUseCase = new GetCourtByIdUseCase(courtRepository);
+const getCourtByLocationUseCase = new GetCourtByLocationUseCase(courtRepository);
 const getCourtByUserUseCase = new GetCourtByUserUseCase(courtRepository);
 const getCourtByNameUseCase = new GetCourtByNameUseCase(courtRepository);
 const updateCourtUseCase = new UpdateCourtUseCase(courtRepository, sportRepository, userRepository);
 const deleteCourtUseCase = new DeleteCourtUseCase(courtRepository);
 
 const courtController = new CourtController(createCourtUseCase, getCourtsUseCase,
-    getCourtBySportUseCase, getCourtByIdUseCase,
+    getCourtBySportUseCase, getCourtByIdUseCase, getCourtByLocationUseCase,
     getCourtByUserUseCase, getCourtByNameUseCase,
     updateCourtUseCase, deleteCourtUseCase);
 
 router.post('/', courtController.create);
 router.get('/', courtController.getAll);
 router.get('/search/id/:id', courtController.getById);
+router.get('/search/location/:location', courtController.getByLocation);
 router.get('/search/sport/:sport', courtController.getBySport);
 router.get('/search/user/:user', courtController.getByUser);
 router.get('/search/name/:name', courtController.getByName);

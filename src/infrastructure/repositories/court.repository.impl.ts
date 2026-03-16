@@ -116,6 +116,18 @@ export class CourtRepositoryImpl implements CourtRepository {
     }
 
     /**
+     * Find a court by its location.
+     * Includes Sport and User associations.
+     */
+    async getByLocation(location: string): Promise<Court[]> {
+        const courts = await CourtModel.findAll({
+            where: { location },
+            include: [SportModel, UserModel]
+        });
+        return courts.map(c => this.toEntity(c));
+    }
+
+    /**
      * Retrieve all courts in the database.
      * Includes Sport and User associations for each court.
      */
@@ -129,7 +141,7 @@ export class CourtRepositoryImpl implements CourtRepository {
     //Map a CourtModel (Sequelize) to a Court domain entity.
     private toEntity(model: CourtModel): Court {
         if (!model) throw new Error('Court model is null');
-        
+
         return new Court(
             model.id,
             model.name,
@@ -137,6 +149,7 @@ export class CourtRepositoryImpl implements CourtRepository {
             model.image,
             model.capacity,
             model.pricePerHour,
+            model.location,
             model.isAvailable,
             this.sportToEntity(model.sport),
             this.userToEntity(model.user)
@@ -146,7 +159,7 @@ export class CourtRepositoryImpl implements CourtRepository {
     //Map a SportModel to a Sport domain entity.
     private sportToEntity(model: SportModel): Sport {
         if (!model) {
-             throw new Error('Associated Sport model is null. Ensure Sport association is included in the query.');
+            throw new Error('Associated Sport model is null. Ensure Sport association is included in the query.');
         }
         return new Sport(
             model.id,

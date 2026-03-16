@@ -12,6 +12,7 @@ export interface CourtRepository {
     getBySport(sportId: string): Promise<Court[]>;
     getByName(name: string): Promise<Court | null>;
     getById(id: string): Promise<Court | null>;
+    getByLocation(location: string): Promise<Court[]>;
     getAll(): Promise<Court[]>;
 
 }

@@ -48,6 +48,13 @@ export class InMemoryCourtRepository implements CourtRepository {
     }
 
     /**
+     * Get courts by Location.
+     */
+    async getByLocation(location: string): Promise<Court[]> {
+        return this.courts.filter(court => court.location === location);
+    }
+
+    /**
      * Update an existing court.
      */
     async update(id: string, court: Court): Promise<Court> {
