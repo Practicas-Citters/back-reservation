@@ -14,6 +14,7 @@ export interface CreateCourtInput {
     image: string;
     capacity: number;
     pricePerHour: number;
+    location:string;
     isAvailable: boolean;
     sportId: string;
     userId: string;
@@ -53,9 +54,10 @@ export class CreateCourtUseCase {
             input.image,
             input.capacity,
             input.pricePerHour,
+            input.location,
             input.isAvailable,
             sport,
-            user
+            user,
         );
         return this.courtRepository.create(newCourt);
     }
