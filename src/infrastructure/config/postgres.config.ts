@@ -6,6 +6,7 @@ import { CourtModel } from '../models/court.model.js';
 import { BookingModel } from '../models/booking.model.js';
 import { PaymentModel } from '../models/payment.model.js';
 import { ScheduleModel } from '../models/schedule.model.js';
+import { OrganizationModel } from '../models/organization.model.js';
 
 dotenv.config();
 
@@ -17,7 +18,7 @@ export const sequelize = new Sequelize({
     password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME || '',
     logging: console.log, // Set to false to disable logging
-    models: [UserModel, SportModel, CourtModel, BookingModel, PaymentModel, ScheduleModel],
+    models: [UserModel, SportModel, CourtModel, BookingModel, PaymentModel, ScheduleModel, OrganizationModel],
 });
 
 export const connectDB = async () => {
