@@ -13,6 +13,6 @@ export class Organization {
         public logo: string | null,
         public bannerImage: string | null,
         public isActive: boolean,
-        public managers: User[]
+        public managers: User[] //We will use this as an array just in case there is more than one account per organization
     ) { }
 }
