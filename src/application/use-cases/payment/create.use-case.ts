@@ -1,6 +1,7 @@
 import { Payment, PaymentStatus, PaymentMethod } from "../../../domain/entities/payment.entity.js";
 import type { PaymentRepository } from "../../../domain/repositories/payment.repository.js";
 import type { BookingRepository } from "../../../domain/repositories/booking.domain.repository.js";
+import { Booking, BookingStatus } from "../../../domain/entities/booking.entity.js";
 
 // Use case to create a payment
 
@@ -19,6 +20,7 @@ export class CreatePaymentUseCase {
     ) { }
 
     async execute(input: CreatePaymentInput): Promise<Payment> {
+        try{
         const booking = await this.bookingRepository.getById(input.bookingId);
         if (!booking) {
             throw new Error(`Booking with id ${input.bookingId} not found`);
@@ -35,6 +37,19 @@ export class CreatePaymentUseCase {
             new Date().toISOString()
         );
 
-        return await this.paymentRepository.create(payment);
+        
+        const finalPayment = await this.paymentRepository.create(payment);
+        // Update booking status to CONFIRMED
+        const updatedBooking: Partial<Booking> = {
+            status: BookingStatus.CONFIRMED
+        };
+
+        // Save the updated booking status using the booking id
+        await this.bookingRepository.update(input.bookingId, updatedBooking);
+        return finalPayment;
+    }
+    catch (error) {
+        throw new Error(`Payment cancelled: ${error instanceof Error ? error.message : String(error)}`);
+    }
     }
 }
