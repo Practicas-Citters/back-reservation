@@ -13,7 +13,7 @@ export class InMemorySportRepository implements SportRepository {
 
     // Search a sport by name
     async getByName(name: string): Promise<Sport | null> {
-        const sport = this.sports.find(s => s.name === name);
+        const sport = this.sports.find(s => s.name.toLowerCase() === name.toLowerCase());
         return sport || null;
     }
 

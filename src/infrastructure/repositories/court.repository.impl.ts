@@ -3,6 +3,8 @@ import { Court } from '../../domain/entities/court.entity.js';
 import { CourtModel } from '../models/court.model.js';
 import { SportModel } from '../models/sport.model.js';
 import { UserModel } from '../models/user.model.js';
+import { Sequelize } from 'sequelize';
+
 import { Sport } from '../../domain/entities/sport.entity.js';
 import { User } from '../../domain/entities/user.entity.js';
 
@@ -96,7 +98,10 @@ export class CourtRepositoryImpl implements CourtRepository {
      */
     async getByName(name: string): Promise<Court | null> {
         const court = await CourtModel.findOne({
-            where: { name },
+            where: Sequelize.where(
+                Sequelize.fn('LOWER', Sequelize.col('name')),
+                name.toLowerCase()
+            ),
             include: [SportModel, UserModel]
         });
         if (!court) return null;
@@ -121,7 +126,10 @@ export class CourtRepositoryImpl implements CourtRepository {
      */
     async getByLocation(location: string): Promise<Court[]> {
         const courts = await CourtModel.findAll({
-            where: { location },
+            where: Sequelize.where(
+                Sequelize.fn('LOWER', Sequelize.col('location')),
+                location.toLowerCase()
+            ),
             include: [SportModel, UserModel]
         });
         return courts.map(c => this.toEntity(c));

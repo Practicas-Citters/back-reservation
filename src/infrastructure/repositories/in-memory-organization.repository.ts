@@ -59,27 +59,27 @@ export class InMemoryOrganizationRepository implements OrganizationRepository {
      * Retrieves an organization by its name.
      */
     async getByName(name: string): Promise<Organization | null> {
-        return this.organizations.find(org => org.name === name) || null;
+        return this.organizations.find(org => org.name.toLowerCase() === name.toLowerCase()) || null;
     }
 
     /**
      * Retrieves an organization by its email.
      */
     async getByEmail(email: string): Promise<Organization | null> {
-        return this.organizations.find(org => org.email === email) || null;
+        return this.organizations.find(org => org.email.toLowerCase() === email.toLowerCase()) || null;
     }
 
     /**
      * Retrieves an organization by its address.
      */
     async getByAddress(address: string): Promise<Organization | null> {
-        return this.organizations.find(org => org.address === address) || null;
+        return this.organizations.find(org => org.address.toLowerCase() === address.toLowerCase()) || null;
     }
 
     /**
      * Retrieves organizations by city.
      */
     async getByCity(city: string): Promise<Organization[]> {
-        return this.organizations.filter(org => org.city === city);
+        return this.organizations.filter(org => org.city.toLowerCase() === city.toLowerCase());
     }
 }

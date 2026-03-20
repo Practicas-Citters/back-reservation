@@ -8,7 +8,8 @@
     "db:migrate": "npx sequelize-cli db:migrate",
     "db:migrate:undo": "npx sequelize-cli db:migrate:undo",
     "db:create": "npx sequelize-cli db:create",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:repositories": "tsx tests/repository-search.test.ts"
   },
   "repository": {
     "type": "git",

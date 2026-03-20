@@ -23,7 +23,7 @@ export class InMemoryCourtRepository implements CourtRepository {
      * Get a court by its Name.
      */
     async getByName(name: string): Promise<Court | null> {
-        return this.courts.find(court => court.name === name) || null;
+        return this.courts.find(court => court.name.toLowerCase() === name.toLowerCase()) || null;
     }
 
     /**
@@ -51,7 +51,7 @@ export class InMemoryCourtRepository implements CourtRepository {
      * Get courts by Location.
      */
     async getByLocation(location: string): Promise<Court[]> {
-        return this.courts.filter(court => court.location === location);
+        return this.courts.filter(court => court.location.toLowerCase() === location.toLowerCase());
     }
 
     /**
