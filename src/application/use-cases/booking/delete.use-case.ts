@@ -16,6 +16,10 @@ export class DeleteBookingUseCase {
      * @returns A promise that resolves to true if the booking was deleted, false otherwise.
      */
     async execute(input: DeleteBookingInput): Promise<boolean> {
+        const booking = await this.bookingRepository.getById(input.id);
+        if (!booking) {
+            throw new Error(`Booking with ID ${input.id} not found`);
+        }
         return this.bookingRepository.delete(input.id);
     }
 }

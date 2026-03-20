@@ -19,6 +19,10 @@ export class DeleteSportUseCase {
      * @returns True if deletion was successful, false otherwise.
      */
     async execute(input: DeleteSportInput): Promise<boolean> {
+        const sport = await this.sportRepository.getById(input.id);
+        if (!sport) {
+            throw new Error(`Sport with ID ${input.id} not found`);
+        }
         return this.sportRepository.delete(input.id);
     }
 }
