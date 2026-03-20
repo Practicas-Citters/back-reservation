@@ -1,4 +1,5 @@
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
+
 import { Organization } from '../../domain/entities/organization.entity.js';
 import { User } from '../../domain/entities/user.entity.js';
 import type { OrganizationRepository } from '../../domain/repositories/organization.domain.repository.js';
@@ -84,28 +85,48 @@ export class OrganizationRepositoryImpl implements OrganizationRepository {
 
     // Find an organization by its name.
     async getByName(name: string): Promise<Organization | null> {
-        const model = await OrganizationModel.findOne({ where: { name } });
+        const model = await OrganizationModel.findOne({ 
+            where: Sequelize.where(
+                Sequelize.fn('LOWER', Sequelize.col('name')),
+                name.toLowerCase()
+            ) 
+        });
         if (!model) return null;
         return await this.toEntity(model);
     }
 
     // Find an organization by its email.
     async getByEmail(email: string): Promise<Organization | null> {
-        const model = await OrganizationModel.findOne({ where: { email } });
+        const model = await OrganizationModel.findOne({ 
+            where: Sequelize.where(
+                Sequelize.fn('LOWER', Sequelize.col('email')),
+                email.toLowerCase()
+            ) 
+        });
         if (!model) return null;
         return await this.toEntity(model);
     }
 
     // Find an organization by its address.
     async getByAddress(address: string): Promise<Organization | null> {
-        const model = await OrganizationModel.findOne({ where: { address } });
+        const model = await OrganizationModel.findOne({ 
+            where: Sequelize.where(
+                Sequelize.fn('LOWER', Sequelize.col('address')),
+                address.toLowerCase()
+            ) 
+        });
         if (!model) return null;
         return await this.toEntity(model);
     }
 
     // Find organizations by its city.
     async getByCity(city: string): Promise<Organization[]> {
-        const models = await OrganizationModel.findAll({ where: { city } });
+        const models = await OrganizationModel.findAll({ 
+            where: Sequelize.where(
+                Sequelize.fn('LOWER', Sequelize.col('city')),
+                city.toLowerCase()
+            ) 
+        });
         return Promise.all(models.map(m => this.toEntity(m)));
     }
 

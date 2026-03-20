@@ -1,6 +1,8 @@
 import type { SportRepository } from '../../domain/repositories/sport.domain.repository.js';
 import { Sport } from '../../domain/entities/sport.entity.js';
 import { SportModel } from '../models/sport.model.js';
+import { Sequelize } from 'sequelize';
+
 
 export class SportRepositoryImpl implements SportRepository {
     /**
@@ -53,7 +55,12 @@ export class SportRepositoryImpl implements SportRepository {
      * Find a sport by its Name.
      */
     async getByName(name: string): Promise<Sport | null> {
-        const sport = await SportModel.findOne({ where: { name } });
+        const sport = await SportModel.findOne({ 
+            where: Sequelize.where(
+                Sequelize.fn('LOWER', Sequelize.col('name')),
+                name.toLowerCase()
+            ) 
+        });
         if (!sport) return null;
         return this.toEntity(sport);
     }

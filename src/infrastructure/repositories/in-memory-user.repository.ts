@@ -13,7 +13,7 @@ export class InMemoryUserRepository implements UserRepository {
 
     //Find user by email
     async getByEmail(email: string): Promise<User | null> {
-        const user = this.users.find(u => u.email === email);
+        const user = this.users.find(u => u.email.toLowerCase() === email.toLowerCase());
         return user || null;
     }
 
@@ -37,12 +37,12 @@ export class InMemoryUserRepository implements UserRepository {
 
     //Find user by username
     async getByUsername(username: string): Promise<User | null> {
-        const user = this.users.find(u => u.username === username);
+        const user = this.users.find(u => u.username.toLowerCase() === username.toLowerCase());
         return user || null;
     }
 
-    //Find user by isPremium
-    async getByIsPremium(isPremium: boolean): Promise<User[] | null> {
+    //Find user by premium status
+    async getByPremiumStatus(isPremium: boolean): Promise<User[] | null> {
         const user = this.users.filter(u => u.isPremium === isPremium);
         return user || null;
     }

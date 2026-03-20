@@ -1,6 +1,8 @@
 import type { UserRepository } from '../../domain/repositories/user.domain.repository.js';
 import { User, UserRole } from '../../domain/entities/user.entity.js';
 import { UserModel } from '../models/user.model.js';
+import { Sequelize } from 'sequelize';
+
 
 export class UserRepositoryImpl implements UserRepository {
     /**
@@ -29,7 +31,12 @@ export class UserRepositoryImpl implements UserRepository {
      * Find a user by their unique Email address.
      */
     async getByEmail(email: string): Promise<User | null> {
-        const user = await UserModel.findOne({ where: { email } });
+        const user = await UserModel.findOne({ 
+            where: Sequelize.where(
+                Sequelize.fn('LOWER', Sequelize.col('email')),
+                email.toLowerCase()
+            ) 
+        });
         if (!user) return null;
         return this.toEntity(user);
     }
@@ -64,7 +71,12 @@ export class UserRepositoryImpl implements UserRepository {
      * Find a user by their Username.
      */
     async getByUsername(username: string): Promise<User | null> {
-        const user = await UserModel.findOne({ where: { username } });
+        const user = await UserModel.findOne({ 
+            where: Sequelize.where(
+                Sequelize.fn('LOWER', Sequelize.col('username')),
+                username.toLowerCase()
+            ) 
+        });
         if (!user) return null;
         return this.toEntity(user);
     }
