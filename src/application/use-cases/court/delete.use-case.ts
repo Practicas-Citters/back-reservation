@@ -11,6 +11,10 @@ export class DeleteCourtUseCase {
      * @returns True if deletion was successful, otherwise false.
      */
     async execute(id: string): Promise<boolean> {
+        const court = await this.courtRepository.getById(id);
+        if (!court) {
+            throw new Error(`Court with ID ${id} not found`);
+        }
         return this.courtRepository.delete(id);
     }
 }
