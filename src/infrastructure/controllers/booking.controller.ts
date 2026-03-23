@@ -13,6 +13,7 @@ import { GetBookingsByUserAndDateUseCase } from '../../application/use-cases/boo
 import { CheckAvailabilityUseCase } from '../../application/use-cases/booking/check-availability.use-case.js';
 import { UpdateBookingUseCase } from '../../application/use-cases/booking/update.use-case.js';
 import { DeleteBookingUseCase } from '../../application/use-cases/booking/delete.use-case.js';
+import { BookingSchema } from '../../infrastructure/validation/booking.schema.js';
 
 export class BookingController {
     constructor(
@@ -45,17 +46,33 @@ export class BookingController {
         this.delete = this.delete.bind(this);
     }
 
+    /**
+     * Creates a new booking.
+     * Validates input using BookingSchema.
+     */
     async create(req: Request, res: Response) {
         try {
-            const { userId, courtId, date, startTime, endTime, numPeople, totalPrice } = req.body;
+            // Validate incoming request body
+            const validation = BookingSchema.safeParse(req.body);
+
+            if (!validation.success) {
+                return res.status(400).json({ 
+                    error: "Validation failed", 
+                    details: validation.error.flatten().fieldErrors 
+                });
+            }
+
+            // Using validated data (now typed and cleaned)
+            const { userId, courtId, date, startTime, endTime, numPeople, totalPrice } = validation.data;
+            
             const booking = await this.createBookingUseCase.execute({
-                userId,
-                courtId,
-                date,
-                startTime,
-                endTime,
-                numPeople,
-                totalPrice,
+                userId: userId!,
+                courtId: courtId!,
+                date: date!,
+                startTime: startTime!,
+                endTime: endTime!,
+                numPeople: numPeople!,
+                totalPrice: totalPrice!,
             });
             res.status(201).json(booking);
         } catch (error: any) {
@@ -210,23 +227,37 @@ export class BookingController {
         }
     }
 
+    /**
+     * Updates an existing booking.
+     * Validates input using BookingSchema.partial() to allow any subset of fields.
+     */
     async update(req: Request, res: Response) {
         try {
             const { id } = req.params;
             if (!id || typeof id !== 'string') {
-                res.status(400).json({ error: 'Invalid ID' });
-                return;
+                return res.status(400).json({ error: 'Invalid ID' });
             }
-            const { date, startTime, endTime, numPeople, totalPrice, status, payment } = req.body;
+
+            // Validate incoming request body for partial updates
+            const validation = BookingSchema.partial().safeParse(req.body);
+
+            if (!validation.success) {
+                return res.status(400).json({ 
+                    error: "Validation failed", 
+                    details: validation.error.flatten().fieldErrors 
+                });
+            }
+
+            const validatedData = validation.data;
+
+            // Filter out undefined values to satisfy exactOptionalPropertyTypes in TypeScript
+            const updateInput = Object.fromEntries(
+                Object.entries(validatedData).filter(([_, v]) => v !== undefined)
+            );
+
             const booking = await this.updateBookingUseCase.execute({
                 id,
-                date,
-                startTime,
-                endTime,
-                numPeople,
-                totalPrice,
-                status,
-                payment
+                ...updateInput
             });
             res.status(200).json(booking);
         } catch (error: any) {

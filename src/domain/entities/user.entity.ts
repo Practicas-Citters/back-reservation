@@ -13,7 +13,7 @@ export class User {
         public email: string,
         public password: string,
         public phone: string,
-        public birthDate: string,
+        public birthDate: string, //Format: "YYYY-MM-DD"
         public role: UserRole,
         public profilePicture: string,
         public isPremium: boolean,

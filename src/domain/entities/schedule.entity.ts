@@ -16,7 +16,7 @@ export class Schedule {
         public id: string,
         public court: Court,
         public dayOfWeek: DayOfWeek,
-        public startTime: string,
-        public endTime: string
+        public startTime: string, // Format: "HH:mm"
+        public endTime: string    // Format: "HH:mm"
     ) { }
 }
