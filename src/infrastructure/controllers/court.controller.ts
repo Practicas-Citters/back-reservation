@@ -4,11 +4,10 @@ import { GetAllCourtsUseCase } from '../../application/use-cases/court/get-all.u
 import { GetCourtBySportUseCase } from '../../application/use-cases/court/get-by-sport.use-case.js';
 import { GetCourtByIdUseCase } from '../../application/use-cases/court/get-by-id.use-case.js';
 import { GetCourtByLocationUseCase } from '../../application/use-cases/court/get-by-location.use-case.js';
-import { GetCourtByUserUseCase } from '../../application/use-cases/court/get-by-user.use-case.js';
+import { GetCourtByOrganizationUseCase } from '../../application/use-cases/court/get-by-organization.use-case.js';
 import { GetCourtByNameUseCase } from '../../application/use-cases/court/get-by-name.use-case.js';
 import { UpdateCourtUseCase } from '../../application/use-cases/court/update.use-case.js';
 import { DeleteCourtUseCase } from '../../application/use-cases/court/delete.use-case.js';
-import { error } from 'console';
 
 export class CourtController {
     constructor(
@@ -17,7 +16,7 @@ export class CourtController {
         private readonly getCourtBySportUseCase: GetCourtBySportUseCase,
         private readonly getCourtByIdUseCase: GetCourtByIdUseCase,
         private readonly getCourtByLocationUseCase: GetCourtByLocationUseCase,
-        private readonly getCourtByUserUseCase: GetCourtByUserUseCase,
+        private readonly getCourtByOrganizationUseCase: GetCourtByOrganizationUseCase,
         private readonly getCourtByNameUseCase: GetCourtByNameUseCase,
         private readonly updateCourtUseCase: UpdateCourtUseCase,
         private readonly deleteCourtUseCase: DeleteCourtUseCase
@@ -27,7 +26,7 @@ export class CourtController {
         this.getBySport = this.getBySport.bind(this);
         this.getById = this.getById.bind(this);
         this.getByLocation = this.getByLocation.bind(this);
-        this.getByUser = this.getByUser.bind(this);
+        this.getByOrganization = this.getByOrganization.bind(this);
         this.getByName = this.getByName.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
@@ -35,7 +34,7 @@ export class CourtController {
 
     /**
      * Create a new court.
-     * Expects name, description, image, capacity, pricePerHour, isAvailable, sport, user in the request body.
+     * Expects name, description, image, capacity, pricePerHour, isAvailable, sport, organization in the request body.
      */
     async create(req: Request, res: Response) {
         try {
@@ -149,17 +148,17 @@ export class CourtController {
     }
 
     /**
-     * Get courts by User ID.
-     * Expects 'user' in the route parameters.
+     * Get courts by Organization ID.
+     * Expects 'organization' in the route parameters.
      */
-    async getByUser(req: Request, res: Response) {
+    async getByOrganization(req: Request, res: Response) {
         try {
-            const { user } = req.params;
-            if (!user || typeof user !== 'string') {
-                res.status(400).json({ error: 'Invalid user' });
+            const { organization } = req.params;
+            if (!organization || typeof organization !== 'string') {
+                res.status(400).json({ error: 'Invalid organization' });
                 return;
             }
-            const court = await this.getCourtByUserUseCase.execute(user);
+            const court = await this.getCourtByOrganizationUseCase.execute(organization);
             res.status(200).json(court);
         } catch (error: any) {
             console.error(error);
@@ -180,7 +179,7 @@ export class CourtController {
                 return;
             }
 
-            const { name, description, image, capacity, pricePerHour, isAvailable, sport, user } = req.body;
+            const { name, description, image, capacity, pricePerHour, isAvailable, sportId, organizationId } = req.body;
 
             // Validations
             if (name !== undefined && (typeof name !== 'string' || name.trim() === '')) {
@@ -211,7 +210,8 @@ export class CourtController {
                     capacity,
                     pricePerHour,
                     isAvailable,
-                    // relations skipped for now
+                    sportId,
+                    organizationId
                 });
                 res.status(200).json(court);
             } catch (error: any) {
@@ -247,3 +247,4 @@ export class CourtController {
         }
     }
 }
+

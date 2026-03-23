@@ -9,11 +9,11 @@ export interface UpdateCourtInput {
     pricePerHour?: number;
     isAvailable?: boolean;
     sportId?: string;
-    userId?: string;
+    organizationId?: string;
 }
 
 import type { SportRepository } from "../../../domain/repositories/sport.domain.repository.js";
-import type { UserRepository } from "../../../domain/repositories/user.domain.repository.js";
+import type { OrganizationRepository } from "../../../domain/repositories/organization.domain.repository.js";
 
 /**
  * Use Case to update an existing court.
@@ -23,7 +23,7 @@ export class UpdateCourtUseCase {
     constructor(
         private readonly courtRepository: CourtRepository,
         private readonly sportRepository: SportRepository,
-        private readonly userRepository: UserRepository,
+        private readonly organizationRepository: OrganizationRepository,
     ) { }
 
     /**
@@ -59,14 +59,15 @@ export class UpdateCourtUseCase {
             court.sport = sport;
         }
 
-        if (input.userId !== undefined) {
-            const user = await this.userRepository.getById(input.userId);
-            if (!user) {
-                throw new Error(`User with id ${input.userId} not found`);
+        if (input.organizationId !== undefined) {
+            const organization = await this.organizationRepository.getById(input.organizationId);
+            if (!organization) {
+                throw new Error(`Organization with id ${input.organizationId} not found`);
             }
-            court.user = user;
+            court.organization = organization;
         }
 
         return this.courtRepository.update(id, court);
     }
 }
+

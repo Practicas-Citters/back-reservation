@@ -43,13 +43,14 @@ async function testOrganization(repo: InMemoryOrganizationRepository) {
 async function testCourt(repo: InMemoryCourtRepository) {
     console.log('\n--- Testing Court ---');
     const sport = new Sport('1', 'Tennis', 'url', 2, 4);
-    const user = new User('1', 'Owner', 'owner', 'owner@example.com', 'pass', '123', '1990-01-01', UserRole.ADMIN, '', false, 0);
-    const court = new Court('1', 'Blue Court', 'Desc', 'img', 4, 20, 'Barcelona', true, sport, user);
+    const org = new Organization('1', 'My Org', 'Desc', 'org@example.com', '123', 'Street 1', 'Madrid', '28001', '', '', true, []);
+    const court = new Court('1', 'Blue Court', 'Desc', 'img', 4, 20, 'Barcelona', true, sport, org);
     await repo.create(court);
 
     console.log('Name "BLUE COURT":', (await repo.getByName('BLUE COURT')) ? 'PASSED' : 'FAILED');
     console.log('Location "barcelona":', (await repo.getByLocation('barcelona')).length > 0 ? 'PASSED' : 'FAILED');
 }
+
 
 async function runAllTests() {
     try {

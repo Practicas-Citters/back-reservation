@@ -27,10 +27,10 @@ export class InMemoryCourtRepository implements CourtRepository {
     }
 
     /**
-     * Get courts by User ID.
+     * Get courts by Organization ID.
      */
-    async getByUserId(userId: string): Promise<Court[]> {
-        return this.courts.filter(court => court.user.id === userId);
+    async getByOrganizationId(organizationId: string): Promise<Court[]> {
+        return this.courts.filter(court => court.organization.id === organizationId);
     }
 
     /**
@@ -79,3 +79,4 @@ export class InMemoryCourtRepository implements CourtRepository {
     }
 
 }
+

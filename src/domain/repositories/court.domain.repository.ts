@@ -7,8 +7,8 @@ export interface CourtRepository {
     update(id: string, court: Court): Promise<Court>;
     delete(id: string): Promise<boolean>;
 
-    // Search the court by user / sport / name / id / all of them
-    getByUserId(userId: string): Promise<Court[]>;
+    // Search the court by organization / sport / name / id / all of them
+    getByOrganizationId(organizationId: string): Promise<Court[]>;
     getBySport(sportId: string): Promise<Court[]>;
     getByName(name: string): Promise<Court | null>;
     getById(id: string): Promise<Court | null>;
@@ -16,3 +16,4 @@ export interface CourtRepository {
     getAll(): Promise<Court[]>;
 
 }
+
