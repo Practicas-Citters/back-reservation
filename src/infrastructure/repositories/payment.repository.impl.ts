@@ -5,10 +5,13 @@ import { BookingModel } from "../models/booking.model.js";
 import { UserModel } from "../models/user.model.js";
 import { CourtModel } from "../models/court.model.js";
 import { SportModel } from "../models/sport.model.js";
+import { OrganizationModel } from "../models/organization.model.js";
 import { Booking } from "../../domain/entities/booking.entity.js";
 import { Court } from "../../domain/entities/court.entity.js";
 import { Sport } from "../../domain/entities/sport.entity.js";
 import { User } from "../../domain/entities/user.entity.js";
+import { Organization } from "../../domain/entities/organization.entity.js";
+
 
 export class PaymentRepositoryImpl implements PaymentRepository {
 
@@ -33,7 +36,7 @@ export class PaymentRepositoryImpl implements PaymentRepository {
                     include: [
                         {
                             model: CourtModel,
-                            include: [SportModel, UserModel]
+                            include: [SportModel, OrganizationModel]
                         },
                         { model: UserModel }
                     ]
@@ -57,7 +60,7 @@ export class PaymentRepositoryImpl implements PaymentRepository {
                     include: [
                         {
                             model: CourtModel,
-                            include: [SportModel, UserModel]
+                            include: [SportModel, OrganizationModel]
                         },
                         { model: UserModel }
                     ]
@@ -101,7 +104,7 @@ export class PaymentRepositoryImpl implements PaymentRepository {
                     include: [
                         {
                             model: CourtModel,
-                            include: [SportModel, UserModel]
+                            include: [SportModel, OrganizationModel]
                         },
                         { model: UserModel }
                     ]
@@ -124,7 +127,7 @@ export class PaymentRepositoryImpl implements PaymentRepository {
                     include: [
                         {
                             model: CourtModel,
-                            include: [SportModel, UserModel]
+                            include: [SportModel, OrganizationModel]
                         },
                         { model: UserModel }
                     ]
@@ -147,7 +150,7 @@ export class PaymentRepositoryImpl implements PaymentRepository {
                     include: [
                         {
                             model: CourtModel,
-                            include: [SportModel, UserModel]
+                            include: [SportModel, OrganizationModel]
                         },
                         { model: UserModel }
                     ]
@@ -170,7 +173,7 @@ export class PaymentRepositoryImpl implements PaymentRepository {
                     include: [
                         {
                             model: CourtModel,
-                            include: [SportModel, UserModel]
+                            include: [SportModel, OrganizationModel]
                         },
                         { model: UserModel }
                     ]
@@ -193,7 +196,7 @@ export class PaymentRepositoryImpl implements PaymentRepository {
                     include: [
                         {
                             model: CourtModel,
-                            include: [SportModel, UserModel]
+                            include: [SportModel, OrganizationModel]
                         },
                         { model: UserModel }
                     ]
@@ -209,9 +212,7 @@ export class PaymentRepositoryImpl implements PaymentRepository {
         if (!model) throw new Error('Payment model is null');
         const bookingModel = model.booking;
         if (!bookingModel) throw new Error('Payment booking is null. Ensure "booking" association is included.');
-        if (!bookingModel.court) throw new Error('Payment booking court is null.');
-        if (!bookingModel.court.sport) throw new Error('Payment booking court sport is null.');
-        if (!bookingModel.court.user) throw new Error('Payment booking court owner is null.');
+        if (!bookingModel.court.organization) throw new Error('Payment booking court owner is null.');
         if (!bookingModel.user) throw new Error('Payment booking user is null.');
         if (!model.user) throw new Error('Payment user is null.');
 
@@ -223,18 +224,19 @@ export class PaymentRepositoryImpl implements PaymentRepository {
             bookingModel.court.sport.maxPlayers
         );
 
-        const owner = new User(
-            bookingModel.court.user.id,
-            bookingModel.court.user.fullName,
-            bookingModel.court.user.username,
-            bookingModel.court.user.email,
-            bookingModel.court.user.password,
-            bookingModel.court.user.phone || '',
-            bookingModel.court.user.birthDate,
-            bookingModel.court.user.role,
-            bookingModel.court.user.profilePicture || '',
-            bookingModel.court.user.isPremium,
-            bookingModel.court.user.points
+        const organization = new Organization(
+            bookingModel.court.organization.id,
+            bookingModel.court.organization.name,
+            bookingModel.court.organization.description,
+            bookingModel.court.organization.email,
+            bookingModel.court.organization.phone,
+            bookingModel.court.organization.address,
+            bookingModel.court.organization.city,
+            bookingModel.court.organization.zipCode,
+            bookingModel.court.organization.logo,
+            bookingModel.court.organization.bannerImage,
+            bookingModel.court.organization.isActive,
+            []
         );
 
         const court = new Court(
@@ -247,8 +249,9 @@ export class PaymentRepositoryImpl implements PaymentRepository {
             bookingModel.court.location,
             bookingModel.court.isAvailable,
             sport,
-            owner
+            organization
         );
+
 
         const user = new User(
             bookingModel.user.id,

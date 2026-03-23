@@ -1,5 +1,5 @@
 import type { Sport } from "./sport.entity.js";
-import type { User } from "./user.entity.js";
+import type { Organization } from "./organization.entity.js";
 
 export class Court {
     constructor(
@@ -12,6 +12,7 @@ export class Court {
         public location: string,
         public isAvailable: boolean,
         public sport: Sport,
-        public user: User
+        public organization: Organization
     ) { }
 }
+

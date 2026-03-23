@@ -2,16 +2,16 @@ import type { CourtRepository } from '../../domain/repositories/court.domain.rep
 import { Court } from '../../domain/entities/court.entity.js';
 import { CourtModel } from '../models/court.model.js';
 import { SportModel } from '../models/sport.model.js';
-import { UserModel } from '../models/user.model.js';
+import { OrganizationModel } from '../models/organization.model.js';
 import { Sequelize } from 'sequelize';
 
 import { Sport } from '../../domain/entities/sport.entity.js';
-import { User } from '../../domain/entities/user.entity.js';
+import { Organization } from '../../domain/entities/organization.entity.js';
 
 export class CourtRepositoryImpl implements CourtRepository {
     /**
      * Create a new court and persist it to the database.
-     * Re-fetches the court with full associations (Sport and User).
+     * Re-fetches the court with full associations (Sport and Organization).
      */
     async create(court: Court): Promise<Court> {
         const newCourt = await CourtModel.create({
@@ -23,11 +23,11 @@ export class CourtRepositoryImpl implements CourtRepository {
             pricePerHour: court.pricePerHour,
             isAvailable: court.isAvailable,
             sportId: court.sport.id,
-            userId: court.user.id
+            organizationId: court.organization.id
         });
 
         const created = await CourtModel.findByPk(newCourt.id, {
-            include: [SportModel, UserModel]
+            include: [SportModel, OrganizationModel]
         });
 
         if (!created) throw new Error('Error creating court');
@@ -47,13 +47,13 @@ export class CourtRepositoryImpl implements CourtRepository {
             pricePerHour: court.pricePerHour,
             isAvailable: court.isAvailable,
             sportId: court.sport.id,
-            userId: court.user.id
+            organizationId: court.organization.id
         }, {
             where: { id }
         });
 
         const updated = await CourtModel.findByPk(id, {
-            include: [SportModel, UserModel]
+            include: [SportModel, OrganizationModel]
         });
 
         if (!updated) throw new Error('Court not found');
@@ -69,32 +69,32 @@ export class CourtRepositoryImpl implements CourtRepository {
     }
 
     /**
-     * Retrieve all courts owned by a specific user.
-     * Includes Sport and User associations.
+     * Retrieve all courts owned by a specific organization.
+     * Includes Sport and Organization associations.
      */
-    async getByUserId(userId: string): Promise<Court[]> {
+    async getByOrganizationId(organizationId: string): Promise<Court[]> {
         const courts = await CourtModel.findAll({
-            where: { userId },
-            include: [SportModel, UserModel]
+            where: { organizationId },
+            include: [SportModel, OrganizationModel]
         });
         return courts.map(c => this.toEntity(c));
     }
 
     /**
      * Retrieve all courts associated with a specific sport.
-     * Includes Sport and User associations.
+     * Includes Sport and Organization associations.
      */
     async getBySport(sportId: string): Promise<Court[]> {
         const courts = await CourtModel.findAll({
             where: { sportId },
-            include: [SportModel, UserModel]
+            include: [SportModel, OrganizationModel]
         });
         return courts.map(c => this.toEntity(c));
     }
 
     /**
      * Find a court by its Name.
-     * Includes Sport and User associations.
+     * Includes Sport and Organization associations.
      */
     async getByName(name: string): Promise<Court | null> {
         const court = await CourtModel.findOne({
@@ -102,7 +102,7 @@ export class CourtRepositoryImpl implements CourtRepository {
                 Sequelize.fn('LOWER', Sequelize.col('name')),
                 name.toLowerCase()
             ),
-            include: [SportModel, UserModel]
+            include: [SportModel, OrganizationModel]
         });
         if (!court) return null;
         return this.toEntity(court);
@@ -110,11 +110,11 @@ export class CourtRepositoryImpl implements CourtRepository {
 
     /**
      * Find a court by its unique ID.
-     * Includes Sport and User associations.
+     * Includes Sport and Organization associations.
      */
     async getById(id: string): Promise<Court | null> {
         const court = await CourtModel.findByPk(id, {
-            include: [SportModel, UserModel]
+            include: [SportModel, OrganizationModel]
         });
         if (!court) return null;
         return this.toEntity(court);
@@ -122,7 +122,7 @@ export class CourtRepositoryImpl implements CourtRepository {
 
     /**
      * Find a court by its location.
-     * Includes Sport and User associations.
+     * Includes Sport and Organization associations.
      */
     async getByLocation(location: string): Promise<Court[]> {
         const courts = await CourtModel.findAll({
@@ -130,18 +130,18 @@ export class CourtRepositoryImpl implements CourtRepository {
                 Sequelize.fn('LOWER', Sequelize.col('location')),
                 location.toLowerCase()
             ),
-            include: [SportModel, UserModel]
+            include: [SportModel, OrganizationModel]
         });
         return courts.map(c => this.toEntity(c));
     }
 
     /**
      * Retrieve all courts in the database.
-     * Includes Sport and User associations for each court.
+     * Includes Sport and Organization associations for each court.
      */
     async getAll(): Promise<Court[]> {
         const courts = await CourtModel.findAll({
-            include: [SportModel, UserModel]
+            include: [SportModel, OrganizationModel]
         });
         return courts.map(c => this.toEntity(c));
     }
@@ -160,7 +160,7 @@ export class CourtRepositoryImpl implements CourtRepository {
             model.location,
             model.isAvailable,
             this.sportToEntity(model.sport),
-            this.userToEntity(model.user)
+            this.organizationToEntity(model.organization)
         );
     }
 
@@ -178,23 +178,24 @@ export class CourtRepositoryImpl implements CourtRepository {
         );
     }
 
-    //Map a UserModel to a User domain entity.
-    private userToEntity(model: UserModel): User {
+    //Map an OrganizationModel to an Organization domain entity.
+    private organizationToEntity(model: OrganizationModel): Organization {
         if (!model) {
-            throw new Error('Associated User model is null. Ensure User association is included in the query.');
+            throw new Error('Associated Organization model is null. Ensure Organization association is included in the query.');
         }
-        return new User(
+        return new Organization(
             model.id,
-            model.fullName,
-            model.username,
+            model.name,
+            model.description,
             model.email,
-            model.password,
-            model.phone ?? '',
-            model.birthDate,
-            model.role,
-            model.profilePicture ?? '',
-            model.isPremium,
-            model.points
+            model.phone,
+            model.address,
+            model.city,
+            model.zipCode,
+            model.logo,
+            model.bannerImage,
+            model.isActive,
+            [] // Mapping managers as empty for now or we could fetch them if needed
         );
     }
-}
+}

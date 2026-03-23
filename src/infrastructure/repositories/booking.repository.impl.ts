@@ -8,6 +8,8 @@ import { BookingModel } from '../models/booking.model.js';
 import { UserModel } from '../models/user.model.js';
 import { CourtModel } from '../models/court.model.js';
 import { SportModel } from '../models/sport.model.js';
+import { OrganizationModel } from '../models/organization.model.js';
+import { Organization } from '../../domain/entities/organization.entity.js';
 
 export class BookingRepositoryImpl implements BookingRepository {
     /**
@@ -85,7 +87,7 @@ export class BookingRepositoryImpl implements BookingRepository {
                     as: 'court',
                     include: [
                         { model: SportModel, as: 'sport' }, // Sport of the court
-                        { model: UserModel, as: 'user' }    // Owner of the court
+                        { model: OrganizationModel, as: 'organization' }    // Organization owner of the court
                     ]
                 }
             ]
@@ -352,7 +354,7 @@ export class BookingRepositoryImpl implements BookingRepository {
     private courtToEntity(model: CourtModel): Court {
         if (!model) throw new Error('Court model is null');
         if (!model.sport) throw new Error('Court sport is null. Ensure "sport" association is included.');
-        if (!model.user) throw new Error('Court owner is null. Ensure "user" association is included for court.');
+        if (!model.organization) throw new Error('Court owner is null. Ensure "organization" association is included for court.');
 
         return new Court(
             model.id,
@@ -364,9 +366,28 @@ export class BookingRepositoryImpl implements BookingRepository {
             model.location,
             model.isAvailable,
             this.sportToEntity(model.sport),
-            this.userToEntity(model.user) // The owner of the court
+            this.organizationToEntity(model.organization) // The organization owner of the court
         );
     }
+
+    private organizationToEntity(model: OrganizationModel): Organization {
+        if (!model) throw new Error('Organization model is null');
+        return new Organization(
+            model.id,
+            model.name,
+            model.description,
+            model.email,
+            model.phone,
+            model.address,
+            model.city,
+            model.zipCode,
+            model.logo,
+            model.bannerImage,
+            model.isActive,
+            []
+        );
+    }
+
 
     //Map a SportModel to a Sport domain entity.
     private sportToEntity(model: SportModel): Sport {

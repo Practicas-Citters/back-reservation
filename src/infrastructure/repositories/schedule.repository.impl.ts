@@ -5,10 +5,10 @@ import type { ScheduleRepository } from "../../domain/repositories/schedule.doma
 import { ScheduleModel } from "../models/schedule.model.js";
 import { CourtModel } from "../models/court.model.js";
 import { SportModel } from "../models/sport.model.js";
-import { UserModel } from "../models/user.model.js";
+import { OrganizationModel } from "../models/organization.model.js";
 import { Court } from "../../domain/entities/court.entity.js";
 import { Sport } from "../../domain/entities/sport.entity.js";
-import { User } from "../../domain/entities/user.entity.js";
+import { Organization } from "../../domain/entities/organization.entity.js";
 
 export class ScheduleRepositoryImpl implements ScheduleRepository {
 
@@ -49,7 +49,7 @@ export class ScheduleRepositoryImpl implements ScheduleRepository {
         const scheduleModel = await ScheduleModel.findByPk(id, {
             include: [{
                 model: CourtModel,
-                include: [SportModel, UserModel]
+                include: [SportModel, OrganizationModel]
             }]
         });
 
@@ -62,7 +62,7 @@ export class ScheduleRepositoryImpl implements ScheduleRepository {
             where: { courtId },
             include: [{
                 model: CourtModel,
-                include: [SportModel, UserModel]
+                include: [SportModel, OrganizationModel]
             }]
         });
 
@@ -73,7 +73,7 @@ export class ScheduleRepositoryImpl implements ScheduleRepository {
         const scheduleModels = await ScheduleModel.findAll({
             include: [{
                 model: CourtModel,
-                include: [SportModel, UserModel]
+                include: [SportModel, OrganizationModel]
             }]
         });
 
@@ -85,7 +85,7 @@ export class ScheduleRepositoryImpl implements ScheduleRepository {
             where: { dayOfWeek },
             include: [{
                 model: CourtModel,
-                include: [SportModel, UserModel]
+                include: [SportModel, OrganizationModel]
             }]
         });
 
@@ -97,7 +97,7 @@ export class ScheduleRepositoryImpl implements ScheduleRepository {
             where: { dayOfWeek, courtId },
             include: [{
                 model: CourtModel,
-                include: [SportModel, UserModel]
+                include: [SportModel, OrganizationModel]
             }]
         });
 
@@ -127,7 +127,7 @@ export class ScheduleRepositoryImpl implements ScheduleRepository {
         const courtModel = model.court;
         if (!courtModel) throw new Error('Schedule court is null. Ensure "court" association is included.');
         if (!courtModel.sport) throw new Error('Schedule court sport is null. Ensure "sport" association is included for court.');
-        if (!courtModel.user) throw new Error('Schedule court owner is null. Ensure "user" association is included for court.');
+        if (!courtModel.organization) throw new Error('Schedule court owner is null. Ensure "organization" association is included for court.');
 
         const sport = new Sport(
             courtModel.sport.id,
@@ -137,18 +137,19 @@ export class ScheduleRepositoryImpl implements ScheduleRepository {
             courtModel.sport.maxPlayers
         );
 
-        const owner = new User(
-            courtModel.user.id,
-            courtModel.user.fullName,
-            courtModel.user.username,
-            courtModel.user.email,
-            courtModel.user.password,
-            courtModel.user.phone ?? '',
-            courtModel.user.birthDate,
-            courtModel.user.role,
-            courtModel.user.profilePicture ?? '',
-            courtModel.user.isPremium,
-            courtModel.user.points
+        const organization = new Organization(
+            courtModel.organization.id,
+            courtModel.organization.name,
+            courtModel.organization.description,
+            courtModel.organization.email,
+            courtModel.organization.phone,
+            courtModel.organization.address,
+            courtModel.organization.city,
+            courtModel.organization.zipCode,
+            courtModel.organization.logo,
+            courtModel.organization.bannerImage,
+            courtModel.organization.isActive,
+            [] // Mapping managers as empty for now
         );
 
         const court = new Court(
@@ -161,8 +162,9 @@ export class ScheduleRepositoryImpl implements ScheduleRepository {
             courtModel.location,
             courtModel.isAvailable,
             sport,
-            owner
+            organization
         );
+
 
         return new Schedule(
             model.id,

@@ -1,5 +1,5 @@
 import { Table, Column, Model, DataType, PrimaryKey, Default, ForeignKey, BelongsTo } from 'sequelize-typescript';
-import { UserModel } from './user.model.js';
+import { OrganizationModel } from './organization.model.js';
 import { SportModel } from './sport.model.js';
 
 @Table({
@@ -74,14 +74,15 @@ export class CourtModel extends Model {
     @BelongsTo(() => SportModel)
     declare sport: SportModel;
 
-    // userId -> id of the user who created the court
-    @ForeignKey(() => UserModel)
+    // organizationId -> id of the organization that owns the court
+    @ForeignKey(() => OrganizationModel)
     @Column({
         type: DataType.UUID,
         allowNull: false,
     })
-    declare userId: string;
+    declare organizationId: string;
 
-    @BelongsTo(() => UserModel)
-    declare user: UserModel;
+    @BelongsTo(() => OrganizationModel)
+    declare organization: OrganizationModel;
 }
+

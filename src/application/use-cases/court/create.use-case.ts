@@ -1,7 +1,7 @@
 import { Court } from "../../../domain/entities/court.entity.js";
 import type { CourtRepository } from "../../../domain/repositories/court.domain.repository.js";
 import type { SportRepository } from "../../../domain/repositories/sport.domain.repository.js";
-import type { UserRepository } from "../../../domain/repositories/user.domain.repository.js";
+import type { OrganizationRepository } from "../../../domain/repositories/organization.domain.repository.js";
 
 // Define a port to generate IDs (Hexagonal: output port)
 export interface IdGenerator {
@@ -17,7 +17,7 @@ export interface CreateCourtInput {
     location:string;
     isAvailable: boolean;
     sportId: string;
-    userId: string;
+    organizationId: string;
 }
 
 // Use Case to create a new court.
@@ -25,7 +25,7 @@ export class CreateCourtUseCase {
     constructor(
         private readonly courtRepository: CourtRepository,
         private readonly sportRepository: SportRepository,
-        private readonly userRepository: UserRepository,
+        private readonly organizationRepository: OrganizationRepository,
         private readonly idGenerator: IdGenerator,
     ) { }
 
@@ -40,9 +40,9 @@ export class CreateCourtUseCase {
             throw new Error(`Sport with id ${input.sportId} not found`);
         }
 
-        const user = await this.userRepository.getById(input.userId);
-        if (!user) {
-            throw new Error(`User with id ${input.userId} not found`);
+        const organization = await this.organizationRepository.getById(input.organizationId);
+        if (!organization) {
+            throw new Error(`Organization with id ${input.organizationId} not found`);
         }
 
         const newId = this.idGenerator.generate();
@@ -57,8 +57,9 @@ export class CreateCourtUseCase {
             input.location,
             input.isAvailable,
             sport,
-            user,
+            organization,
         );
         return this.courtRepository.create(newCourt);
     }
 }
+
