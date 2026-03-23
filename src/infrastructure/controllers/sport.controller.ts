@@ -5,6 +5,7 @@ import { GetSportByIdUseCase } from '../../application/use-cases/sport/get-by-id
 import { GetSportByNameUseCase } from '../../application/use-cases/sport/get-by-name.use-case.js';
 import { UpdateSportUseCase } from '../../application/use-cases/sport/update.use-case.js';
 import { DeleteSportUseCase } from '../../application/use-cases/sport/delete.use-case.js';
+import { SportSchema } from '../../infrastructure/validation/sport.schema.js';
 
 export class SportController {
     /**
@@ -40,21 +41,21 @@ export class SportController {
 
     /**
      * Create a new sport.
-     * Expects name, iconUrl, minPlayers, maxPlayers in the request body.
+     * Validates input using SportSchema.
      */
     async create(req: Request, res: Response) {
         try {
-            const { name, iconUrl, minPlayers, maxPlayers } = req.body;
+            const validation = SportSchema.safeParse(req.body);
 
-            const sport = await this.createSportUseCase.execute({
-                name,
-                iconUrl,
-                minPlayers,
-                maxPlayers
-            });
+            if (!validation.success) {
+                return res.status(400).json({ 
+                    error: "Validation failed", 
+                    details: validation.error.flatten().fieldErrors 
+                });
+            }
 
+            const sport = await this.createSportUseCase.execute(validation.data);
             res.status(201).json(sport);
-
         } catch (error: any) {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error: ' + error.message });
@@ -116,22 +117,29 @@ export class SportController {
     /**
      * Update an existing sport (Partial update).
      * Method: PATCH
-     * Expects 'id' in route parameters and fields to update in body.
+     * Validates input using SportSchema.partial().
      */
     async update(req: Request, res: Response) {
         try {
             const { id } = req.params;
             if (!id || typeof id !== 'string') {
-                res.status(400).json({ error: 'Invalid ID' });
-                return;
+                return res.status(400).json({ error: 'Invalid ID' });
             }
-            const { name, iconUrl, minPlayers, maxPlayers } = req.body;
-            const sport = await this.updateSportUseCase.execute(id, {
-                name,
-                iconUrl,
-                minPlayers,
-                maxPlayers
-            });
+
+            const validation = SportSchema.partial().safeParse(req.body);
+
+            if (!validation.success) {
+                return res.status(400).json({ 
+                    error: "Validation failed", 
+                    details: validation.error.flatten().fieldErrors 
+                });
+            }
+
+            const updateInput = Object.fromEntries(
+                Object.entries(validation.data).filter(([_, v]) => v !== undefined)
+            );
+
+            const sport = await this.updateSportUseCase.execute(id, updateInput as any);
             res.status(200).json(sport);
         } catch (error: any) {
             console.error(error);

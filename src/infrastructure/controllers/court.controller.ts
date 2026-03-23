@@ -8,6 +8,7 @@ import { GetCourtByOrganizationUseCase } from '../../application/use-cases/court
 import { GetCourtByNameUseCase } from '../../application/use-cases/court/get-by-name.use-case.js';
 import { UpdateCourtUseCase } from '../../application/use-cases/court/update.use-case.js';
 import { DeleteCourtUseCase } from '../../application/use-cases/court/delete.use-case.js';
+import { CourtSchema } from '../../infrastructure/validation/court.schema.js';
 
 export class CourtController {
     constructor(
@@ -34,11 +35,20 @@ export class CourtController {
 
     /**
      * Create a new court.
-     * Expects name, description, image, capacity, pricePerHour, isAvailable, sport, organization in the request body.
+     * Validates input using CourtSchema.
      */
     async create(req: Request, res: Response) {
         try {
-            const court = await this.createCourtUseCase.execute(req.body);
+            const validation = CourtSchema.safeParse(req.body);
+
+            if (!validation.success) {
+                return res.status(400).json({ 
+                    error: "Validation failed", 
+                    details: validation.error.flatten().fieldErrors 
+                });
+            }
+
+            const court = await this.createCourtUseCase.execute(validation.data);
             res.status(201).json({ message: 'Court created successfully', court });
         } catch (error: any) {
             console.error(error);
@@ -169,50 +179,30 @@ export class CourtController {
     /**
      * Update an existing court (Partial update).
      * Method: PATCH
-     * Expects 'id' in route parameters and fields to update in body.
+     * Validates input using CourtSchema.partial().
      */
     async update(req: Request, res: Response) {
         try {
             const { id } = req.params;
             if (!id || typeof id !== 'string') {
-                res.status(400).json({ error: 'Invalid court ID' });
-                return;
+                return res.status(400).json({ error: 'Invalid court ID' });
             }
 
-            const { name, description, image, capacity, pricePerHour, isAvailable, sportId, organizationId } = req.body;
+            const validation = CourtSchema.partial().safeParse(req.body);
 
-            // Validations
-            if (name !== undefined && (typeof name !== 'string' || name.trim() === '')) {
-                res.status(400).json({ error: 'Invalid name. Must be a non-empty string.' });
-                return;
+            if (!validation.success) {
+                return res.status(400).json({ 
+                    error: "Validation failed", 
+                    details: validation.error.flatten().fieldErrors 
+                });
             }
 
-            if (capacity !== undefined) {
-                if (typeof capacity !== 'number' || !Number.isInteger(capacity) || capacity <= 0) {
-                    res.status(400).json({ error: 'Invalid capacity. Must be a positive integer.' });
-                    return;
-                }
-            }
-
-            if (pricePerHour !== undefined) {
-                if (typeof pricePerHour !== 'number' || pricePerHour < 0) {
-                    res.status(400).json({ error: 'Invalid pricePerHour. Must be a non-negative number.' });
-                    return;
-                }
-            }
+            const updateInput = Object.fromEntries(
+                Object.entries(validation.data).filter(([_, v]) => v !== undefined)
+            );
 
             try {
-                // Pass validated data (UpdateCourtInput structure) to UseCase
-                const court = await this.updateCourtUseCase.execute(id, {
-                    name,
-                    description,
-                    image,
-                    capacity,
-                    pricePerHour,
-                    isAvailable,
-                    sportId,
-                    organizationId
-                });
+                const court = await this.updateCourtUseCase.execute(id, updateInput as any);
                 res.status(200).json(court);
             } catch (error: any) {
                 if (error.message === `Court with id ${id} not found`) {
