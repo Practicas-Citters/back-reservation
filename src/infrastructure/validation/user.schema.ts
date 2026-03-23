@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { UserRole } from "../../domain/entities/user.entity.js";
 
 /**
@@ -11,7 +12,10 @@ export const UserSchema = z.object({
     .regex(/^[a-zA-Z0-9._-]+$/, "Username can only contain letters, numbers, dots, underscores, and hyphens"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters long"),
-  phone: z.string().min(1, "Phone number is required"), // Basic validation for now
+  phone: z.string().refine((val: string) => {
+    const phoneNumber = parsePhoneNumberFromString(val);
+    return phoneNumber?.isValid() ?? false;
+  }, { message: "Invalid phone number" }),
 
   // Robust birthDate validation: Format + Logical validity + Must be in the past
   birthDate: z.string()

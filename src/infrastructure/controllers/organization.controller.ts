@@ -9,6 +9,8 @@ import { GetOrganizationsByCityUseCase } from '../../application/use-cases/organ
 import { UpdateOrganizationUseCase } from '../../application/use-cases/organization/update.use-case.js';
 import { DeleteOrganizationUseCase } from '../../application/use-cases/organization/delete.use-case.js';
 
+import { OrganizationSchema } from '../validation/organization.schema.js';
+
 export class OrganizationController {
     constructor(
         private readonly createOrganizationUseCase: CreateOrganizationUseCase,
@@ -34,23 +36,15 @@ export class OrganizationController {
 
     async create(req: Request, res: Response) {
         try {
-            const { name, description, email, phone, address, city, zipCode, logo, bannerImage, isActive, managers } = req.body;
-            const organization = await this.createOrganizationUseCase.execute({
-                name,
-                description,
-                email,
-                phone,
-                address,
-                city,
-                zipCode,
-                logo,
-                bannerImage,
-                isActive,
-                managers
-            });
+            const validatedData = OrganizationSchema.parse(req.body);
+            const organization = await this.createOrganizationUseCase.execute(validatedData);
             res.status(201).json(organization);
         } catch (error: any) {
             console.error(error);
+            if (error.name === 'ZodError') {
+                res.status(400).json({ error: 'Validation Error', details: error.errors });
+                return;
+            }
             res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
@@ -147,23 +141,15 @@ export class OrganizationController {
                 res.status(400).json({ error: 'Invalid ID' });
                 return;
             }
-            const { name, description, email, phone, address, city, zipCode, logo, bannerImage, isActive, managers } = req.body;
-            const organization = await this.updateOrganizationUseCase.execute(id, {
-                name,
-                description,
-                email,
-                phone,
-                address,
-                city,
-                zipCode,
-                logo,
-                bannerImage,
-                isActive,
-                managers
-            });
+            const validatedData = OrganizationSchema.partial().parse(req.body);
+            const organization = await this.updateOrganizationUseCase.execute(id, validatedData as any);
             res.status(200).json(organization);
         } catch (error: any) {
             console.error(error);
+            if (error.name === 'ZodError') {
+                res.status(400).json({ error: 'Validation Error', details: error.errors });
+                return;
+            }
             res.status(500).json({ error: 'Internal Server Error: ' + error.message });
         }
     }
