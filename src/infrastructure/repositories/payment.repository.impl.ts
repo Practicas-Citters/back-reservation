@@ -244,6 +244,7 @@ export class PaymentRepositoryImpl implements PaymentRepository {
             bookingModel.court.image,
             bookingModel.court.capacity,
             bookingModel.court.pricePerHour,
+            bookingModel.court.location,
             bookingModel.court.isAvailable,
             sport,
             owner

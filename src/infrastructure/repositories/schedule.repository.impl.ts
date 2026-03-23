@@ -158,6 +158,7 @@ export class ScheduleRepositoryImpl implements ScheduleRepository {
             courtModel.image,
             courtModel.capacity,
             courtModel.pricePerHour,
+            courtModel.location,
             courtModel.isAvailable,
             sport,
             owner
