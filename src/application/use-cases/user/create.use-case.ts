@@ -19,7 +19,8 @@ export interface CreateInput {
     password: string;
     phone: string;
     birthDate: string;
-    // role, isPremium, points are initialized by default
+    isManager: boolean;
+    // isPremium, points are initialized by default
 }
 
 export class CreateUseCase {
@@ -46,7 +47,7 @@ export class CreateUseCase {
         const hashedPassword = await this.passwordHasher.hash(input.password);
 
         // 3. Generate ID and create User entity
-        // Default values: role=USUARIO, profilePicture='', isPremium=false, points=0
+        // Default values: role=CLIENT, profilePicture='', isPremium=false, points=0
         const newUser = new User(
             this.idGenerator.generate(),
             input.fullName,
@@ -55,7 +56,7 @@ export class CreateUseCase {
             hashedPassword,
             input.phone,
             input.birthDate,
-            UserRole.USUARIO,
+            input.isManager ? UserRole.MANAGER : UserRole.CLIENT,
             '', // profilePicture empty by default or default url
             false,
             0

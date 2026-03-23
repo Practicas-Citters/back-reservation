@@ -1,8 +1,8 @@
 
 export enum UserRole {
-    SUPERADMIN = 'superadmin',
     ADMIN = 'admin',
-    USUARIO = 'usuario'
+    CLIENT = 'client',
+    MANAGER = 'manager'
 }
 
 export class User {

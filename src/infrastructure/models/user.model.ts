@@ -62,7 +62,7 @@ export class UserModel extends Model {
   // role -> role of the user
   @Column({
     type: DataType.ENUM(...Object.values(UserRole) as string[]),
-    defaultValue: UserRole.USUARIO,
+    defaultValue: UserRole.CLIENT,
     allowNull: false,
   })
   declare role: UserRole;
