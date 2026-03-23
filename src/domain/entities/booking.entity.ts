@@ -15,7 +15,7 @@ export class Booking {
         public id: string,
         public user: User,
         public court: Court,
-        public date: string,
+        public date: string, // Format: "YYYY-MM-DD"
         public startTime: string, // Format: "HH:mm"
         public endTime: string,   // Format: "HH:mm"
         public numPeople: number,

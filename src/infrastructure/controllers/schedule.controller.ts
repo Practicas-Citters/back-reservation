@@ -10,6 +10,7 @@ import { GetByDayOfWeekUseCase } from '../../application/use-cases/schedule/get-
 import { GetByDayOfWeekAndCourtUseCase } from '../../application/use-cases/schedule/get-by-day-of-week-and-court.use-case.js';
 import { GetByCourtAndDateUseCase } from '../../application/use-cases/schedule/get-by-court-and-date.use-case.js';
 import { DayOfWeek } from '../../domain/entities/schedule.entity.js';
+import { ScheduleSchema } from '../../infrastructure/validation/schedule.schema.js';
 
 export class ScheduleController {
     constructor(
@@ -34,15 +35,22 @@ export class ScheduleController {
         this.getByCourtIdAndDate = this.getByCourtIdAndDate.bind(this);
     }
 
+    /**
+     * Create a new schedule.
+     * Validates input using ScheduleSchema.
+     */
     async create(req: Request, res: Response) {
         try {
-            const { courtId, dayOfWeek, startTime, endTime } = req.body;
-            const schedule = await this.createUseCase.execute({
-                courtId,
-                dayOfWeek,
-                startTime,
-                endTime
-            });
+            const validation = ScheduleSchema.safeParse(req.body);
+
+            if (!validation.success) {
+                return res.status(400).json({ 
+                    error: "Validation failed", 
+                    details: validation.error.flatten().fieldErrors 
+                });
+            }
+
+            const schedule = await this.createUseCase.execute(validation.data);
             res.status(201).json(schedule);
         } catch (error: any) {
             console.error(error);
@@ -89,10 +97,32 @@ export class ScheduleController {
         }
     }
 
+    /**
+     * Update an existing schedule.
+     * Validates input using ScheduleSchema.partial().
+     */
     async update(req: Request, res: Response) {
         try {
             const { id } = req.params;
-            const updated = await this.updateUseCase.execute(id as string, req.body);
+            if (!id || typeof id !== 'string') {
+                return res.status(400).json({ error: 'Invalid schedule ID' });
+            }
+
+            const validation = ScheduleSchema.partial().safeParse(req.body);
+
+            if (!validation.success) {
+                return res.status(400).json({ 
+                    error: "Validation failed", 
+                    details: validation.error.flatten().fieldErrors 
+                });
+            }
+
+            // Filter out undefined values
+            const updateInput = Object.fromEntries(
+                Object.entries(validation.data).filter(([_, v]) => v !== undefined)
+            );
+
+            const updated = await this.updateUseCase.execute(id, updateInput as any);
             res.status(200).json(updated);
         } catch (error: any) {
             console.error(error);

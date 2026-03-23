@@ -9,6 +9,7 @@ import { GetByIdUseCase } from '../../application/use-cases/user/get-by-id.use-c
 import { GetByPremiumStatusUseCase } from '../../application/use-cases/user/get-by-premium-status.use-case.js';
 import { GetByRoleUseCase } from '../../application/use-cases/user/get-by-role.use-case.js';
 import { GetByUsernameUseCase } from '../../application/use-cases/user/get-by-username.use-case.js';
+import { UserSchema } from '../../infrastructure/validation/user.schema.js';
 
 export class UserController {
     constructor(
@@ -35,11 +36,20 @@ export class UserController {
 
     /**
      * Create a new user.
-     * Expects fullName, username, email, password, phone, birthDate in the request body.
+     * Validates input using UserSchema.
      */
     async create(req: Request, res: Response) {
         try {
-            const user = await this.createUseCase.execute(req.body);
+            const validation = UserSchema.safeParse(req.body);
+
+            if (!validation.success) {
+                return res.status(400).json({ 
+                    error: "Validation failed", 
+                    details: validation.error.flatten().fieldErrors 
+                });
+            }
+
+            const user = await this.createUseCase.execute(validation.data);
             res.status(201).json({ message: 'User created successfully', user });
         } catch (error: any) {
             console.error(error);
@@ -50,82 +60,31 @@ export class UserController {
     /**
      * Update an existing user (Partial update).
      * Method: PATCH
-     * Expects 'id' in route parameters and fields to update in body.
+     * Validates input using UserSchema.partial().
      */
     async update(req: Request, res: Response) {
         try {
             const { id } = req.params;
             if (!id || typeof id !== 'string') {
-                res.status(400).json({ error: 'Invalid user ID' });
-                return;
+                return res.status(400).json({ error: 'Invalid user ID' });
             }
 
-            const { fullName, username, email, password, phone, birthDate, role, isPremium, profilePicture, points } = req.body;
+            const validation = UserSchema.partial().safeParse(req.body);
 
-            // Validations
-            if (fullName !== undefined && (typeof fullName !== 'string' || fullName.trim() === '')) {
-                res.status(400).json({ error: 'Invalid fullName. Must be a non-empty string.' });
-                return;
+            if (!validation.success) {
+                return res.status(400).json({ 
+                    error: "Validation failed", 
+                    details: validation.error.flatten().fieldErrors 
+                });
             }
 
-            if (username !== undefined && (typeof username !== 'string' || username.trim() === '')) {
-                res.status(400).json({ error: 'Invalid username. Must be a non-empty string.' });
-                return;
-            }
-
-            if (email !== undefined && (typeof email !== 'string' || email.trim() === '')) {
-                res.status(400).json({ error: 'Invalid email. Must be a non-empty string.' });
-                return;
-            }
-
-            if (password !== undefined && (typeof password !== 'string' || password.trim() === '')) {
-                res.status(400).json({ error: 'Invalid password. Must be a non-empty string.' });
-                return;
-            }
-
-            if (phone !== undefined && (typeof phone !== 'string' || phone.trim() === '')) {
-                res.status(400).json({ error: 'Invalid phone. Must be a non-empty string.' });
-                return;
-            }
-
-            if (birthDate !== undefined && (typeof birthDate !== 'string' || birthDate.trim() === '')) {
-                res.status(400).json({ error: 'Invalid birthDate. Must be a non-empty string.' });
-                return;
-            }
-
-            if (role !== undefined && (typeof role !== 'string' || role.trim() === '')) {
-                res.status(400).json({ error: 'Invalid role. Must be a non-empty string.' });
-                return;
-            }
-
-            if (isPremium !== undefined && typeof isPremium !== 'boolean') {
-                res.status(400).json({ error: 'Invalid isPremium. Must be a boolean.' });
-                return;
-            }
-
-            if (profilePicture !== undefined && (typeof profilePicture !== 'string' || profilePicture.trim() === '')) {
-                res.status(400).json({ error: 'Invalid profilePicture. Must be a non-empty string.' });
-                return;
-            }
-
-            if (points !== undefined && typeof points !== 'number') {
-                res.status(400).json({ error: 'Invalid points. Must be a number.' });
-                return;
-            }
+            // Filter out undefined values to satisfy strict TS requirements
+            const updateInput = Object.fromEntries(
+                Object.entries(validation.data).filter(([_, v]) => v !== undefined)
+            );
 
             try {
-                const user = await this.updateUseCase.execute(id, {
-                    fullName,
-                    username,
-                    email,
-                    password,
-                    phone,
-                    birthDate,
-                    role,
-                    isPremium,
-                    profilePicture,
-                    points
-                });
+                const user = await this.updateUseCase.execute(id, updateInput as any);
                 res.status(200).json(user);
             } catch (error: any) {
                 if (error.message === `User with id ${id} not found`) {
@@ -134,12 +93,9 @@ export class UserController {
                 }
                 throw error;
             }
-
-
         } catch (error: any) {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error: ' + error.message });
-
         }
     }
 
