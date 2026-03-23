@@ -45,7 +45,7 @@ export const UserSchema = z.object({
     }, {
       message: "Birth date must be in the past"
     }),
-
+  isManager: z.boolean({ message: "isManager must be a boolean" }),
   role: z.nativeEnum(UserRole, { message: "Invalid user role" }).optional(),
   profilePicture: z.string().url("Invalid URL for profile picture").optional().nullable(),
   isPremium: z.boolean().optional(),
