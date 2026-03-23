@@ -361,6 +361,7 @@ export class BookingRepositoryImpl implements BookingRepository {
             model.image,
             model.capacity,
             model.pricePerHour,
+            model.location,
             model.isAvailable,
             this.sportToEntity(model.sport),
             this.userToEntity(model.user) // The owner of the court

@@ -4,7 +4,6 @@ import type { Court } from "./court.entity.js";
 import type { Payment } from "./payment.entity.js";
 
 export enum BookingStatus {
-    PENDING = 'pending',
     CONFIRMED = 'confirmed',
     CANCELLED = 'cancelled',
     COMPLETED = 'completed'

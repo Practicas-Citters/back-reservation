@@ -60,7 +60,7 @@ export class CreateBookingUseCase {
             input.endTime,
             input.numPeople,
             input.totalPrice,
-            BookingStatus.PENDING,
+            BookingStatus.CONFIRMED,
             null, // Initial payment is null
             now,
             now

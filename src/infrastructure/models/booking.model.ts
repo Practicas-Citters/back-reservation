@@ -75,7 +75,7 @@ export class BookingModel extends Model {
     @Column({
         type: DataType.ENUM(...Object.values(BookingStatus)),
         allowNull: false,
-        defaultValue: BookingStatus.PENDING,
+        defaultValue: BookingStatus.CONFIRMED,
     })
     declare status: BookingStatus;
 }
