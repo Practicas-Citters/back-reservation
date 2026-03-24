@@ -8,6 +8,7 @@ import { RefundPaymentUseCase } from '../../application/use-cases/payment/refund
 import { DeletePaymentUseCase } from '../../application/use-cases/payment/delete.use-case.js';
 import { GetPaymentsByStatusUseCase } from '../../application/use-cases/payment/get-by-status.use-case.js';
 import { GetPaymentsByMethodUseCase } from '../../application/use-cases/payment/get-by-method.use-case.js';
+import { PaymentSchema } from '../validation/payment.schema.js';
 
 export class PaymentController {
     constructor(
@@ -36,15 +37,16 @@ export class PaymentController {
     // Create a new payment record
     async create(req: Request, res: Response) {
         try {
-            const { amount, method, userId, bookingId } = req.body;
+            const validation = PaymentSchema.safeParse(req.body);
 
-            // In a real case, we would validate the data here (INPUT)
-            const payment = await this.createPaymentUseCase.execute({
-                amount,
-                method,
-                userId,
-                bookingId
-            });
+            if (!validation.success) {
+                return res.status(400).json({ 
+                    error: "Validation failed", 
+                    details: validation.error.flatten().fieldErrors 
+                });
+            }
+
+            const payment = await this.createPaymentUseCase.execute(validation.data);
 
             res.status(201).json(payment);
         } catch (error: any) {
@@ -114,12 +116,19 @@ export class PaymentController {
     async update(req: Request, res: Response) {
         try {
             const { id } = req.params;
-            const { status, transactionId } = req.body;
+            const validation = PaymentSchema.partial().safeParse(req.body);
+
+            if (!validation.success) {
+                return res.status(400).json({ 
+                    error: "Validation failed", 
+                    details: validation.error.flatten().fieldErrors 
+                });
+            }
 
             const payment = await this.updatePaymentUseCase.execute({
                 id: id as string,
-                status,
-                transactionId
+                status: validation.data.status,
+                transactionId: validation.data.transactionId
             });
 
             res.json(payment);

@@ -10,7 +10,7 @@ export const UserSchema = z.object({
   username: z.string()
     .min(3, "Username must be at least 3 characters long")
     .regex(/^[a-zA-Z0-9._-]+$/, "Username can only contain letters, numbers, dots, underscores, and hyphens"),
-  email: z.string().email("Invalid email address"),
+  email: z.email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters long"),
   phone: z.string().refine((val: string) => {
     const phoneNumber = parsePhoneNumberFromString(val);
@@ -46,11 +46,11 @@ export const UserSchema = z.object({
       message: "Birth date must be in the past"
     }),
   isManager: z.boolean({ message: "isManager must be a boolean" }),
-  role: z.nativeEnum(UserRole, { message: "Invalid user role" }).optional(),
-  profilePicture: z.string().url("Invalid URL for profile picture").optional().nullable(),
+  role: z.enum(UserRole, { message: "Invalid user role" }).optional(),
+  profilePicture: z.url("Invalid URL for profile picture").optional().nullable(),
   isPremium: z.boolean().optional(),
   points: z.number().int().min(0, "Points cannot be negative").optional(),
-  favCourtsIds: z.array(z.string().uuid(), { message: "Invalid court ID format" }).default([])
+  favCourtsIds: z.array(z.uuid({ message: "Invalid court ID format" })).default([])
 });
 
 export type UserInput = z.infer<typeof UserSchema>;

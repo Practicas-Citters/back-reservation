@@ -5,7 +5,7 @@ import { z } from "zod";
  */
 export const SportSchema = z.object({
   name: z.string().min(2, "Sport name must be at least 2 characters long"),
-  iconUrl: z.string().url("Invalid URL for sport icon"),
+  iconUrl: z.url("Invalid URL for sport icon"),
   minPlayers: z.number().int().min(1, "Minimum players must be at least 1"),
   maxPlayers: z.number().int().min(1, "Maximum players must be at least 1")
 }).refine((data) => {

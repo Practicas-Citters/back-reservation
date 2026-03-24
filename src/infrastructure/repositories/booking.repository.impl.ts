@@ -346,7 +346,8 @@ export class BookingRepositoryImpl implements BookingRepository {
             model.role,
             model.profilePicture ?? '',
             model.isPremium,
-            model.points
+            model.points,
+            []
         );
     }
 

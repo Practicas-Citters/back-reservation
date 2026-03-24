@@ -175,7 +175,8 @@ export class OrganizationRepositoryImpl implements OrganizationRepository {
             model.role,
             model.profilePicture ?? '',
             model.isPremium,
-            model.points
+            model.points,
+            []
         );
     }
 }
