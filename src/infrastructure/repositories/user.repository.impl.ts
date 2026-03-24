@@ -2,9 +2,12 @@ import type { UserRepository } from '../../domain/repositories/user.domain.repos
 import { User, UserRole } from '../../domain/entities/user.entity.js';
 import { UserModel } from '../models/user.model.js';
 import { Sequelize } from 'sequelize';
+import type { CourtRepository } from '../../domain/repositories/court.domain.repository.js';
 
 
 export class UserRepositoryImpl implements UserRepository {
+    constructor(private readonly courtRepository?: CourtRepository) { }
+
     /**
      * Create a new user and persist it to the database.
      */
@@ -21,7 +24,8 @@ export class UserRepositoryImpl implements UserRepository {
             role: user.role,
             profilePicture: user.profilePicture,
             isPremium: user.isPremium,
-            points: user.points
+            points: user.points,
+            favCourtsIds: user.favCourts.map(c => c.id) //@QUESTION
         });
 
         return this.toEntity(newUser);
@@ -31,11 +35,11 @@ export class UserRepositoryImpl implements UserRepository {
      * Find a user by their unique Email address.
      */
     async getByEmail(email: string): Promise<User | null> {
-        const user = await UserModel.findOne({ 
+        const user = await UserModel.findOne({
             where: Sequelize.where(
                 Sequelize.fn('LOWER', Sequelize.col('email')),
                 email.toLowerCase()
-            ) 
+            )
         });
         if (!user) return null;
         return this.toEntity(user);
@@ -54,28 +58,28 @@ export class UserRepositoryImpl implements UserRepository {
      * Retrieve all users from the database.
      */
     async getAll(): Promise<User[]> {
-        const user = await UserModel.findAll();
-        return user.map(u => this.toEntity(u));
+        const users = await UserModel.findAll();
+        return Promise.all(users.map(u => this.toEntity(u)));
     }
 
     /**
      * Retrieve all users with a specific Role.
      */
     async getByRole(role: UserRole): Promise<User[] | null> {
-        const user = await UserModel.findAll({ where: { role } });
-        if (!user) return null;
-        return user.map(u => this.toEntity(u));
+        const users = await UserModel.findAll({ where: { role } });
+        if (!users) return null;
+        return Promise.all(users.map(u => this.toEntity(u)));
     }
 
     /**
      * Find a user by their Username.
      */
     async getByUsername(username: string): Promise<User | null> {
-        const user = await UserModel.findOne({ 
+        const user = await UserModel.findOne({
             where: Sequelize.where(
                 Sequelize.fn('LOWER', Sequelize.col('username')),
                 username.toLowerCase()
-            ) 
+            )
         });
         if (!user) return null;
         return this.toEntity(user);
@@ -85,9 +89,9 @@ export class UserRepositoryImpl implements UserRepository {
      * Retrieve users based on their premium status.
      */
     async getByPremiumStatus(isPremium: boolean): Promise<User[] | null> {
-        const user = await UserModel.findAll({ where: { isPremium } });
-        if (!user) return null;
-        return user.map(u => this.toEntity(u));
+        const users = await UserModel.findAll({ where: { isPremium } });
+        if (!users) return null;
+        return Promise.all(users.map(u => this.toEntity(u)));
     }
 
     /**
@@ -105,7 +109,8 @@ export class UserRepositoryImpl implements UserRepository {
             role: user.role,
             profilePicture: user.profilePicture,
             isPremium: user.isPremium,
-            points: user.points
+            points: user.points,
+            favCourtsIds: user.favCourts.map(c => c.id)
         }, {
             where: { id: user.id },
             returning: true
@@ -130,7 +135,13 @@ export class UserRepositoryImpl implements UserRepository {
      * Map a UserModel (Sequelize) to a User domain entity.
      * Handles null values for optional fields by providing sensible defaults.
      */
-    private toEntity(model: UserModel): User {
+    private async toEntity(model: UserModel): Promise<User> {
+        // Fetch courts if repository is available
+        const favCourts = this.courtRepository
+            ? (await Promise.all((model.favCourtsIds || []).map(id => this.courtRepository!.getById(id))))
+                .filter((c): c is any => c !== null)
+            : [];
+
         return new User(
             model.id,
             model.fullName,
@@ -142,7 +153,8 @@ export class UserRepositoryImpl implements UserRepository {
             model.role,
             model.profilePicture ?? '',
             model.isPremium,
-            model.points
+            model.points,
+            favCourts
         );
     }
 }

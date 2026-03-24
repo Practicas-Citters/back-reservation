@@ -9,13 +9,13 @@ import { GetByRoleUseCase } from '../../application/use-cases/user/get-by-role.u
 import { GetByUsernameUseCase } from '../../application/use-cases/user/get-by-username.use-case.js';
 import { UpdateUseCase } from '../../application/use-cases/user/update.use-case.js';
 import { DeleteUseCase } from '../../application/use-cases/user/delete.use-case.js';
-import { userRepository, passwordHasher, idGenerator } from '../container.js';
+import { userRepository, passwordHasher, idGenerator, courtRepository } from '../container.js';
 
 const router = Router();
 
 // Dependency injection
-const createUseCase = new CreateUseCase(userRepository, passwordHasher, idGenerator);
-const updateUseCase = new UpdateUseCase(userRepository, passwordHasher);
+const createUseCase = new CreateUseCase(userRepository, passwordHasher, idGenerator, courtRepository);
+const updateUseCase = new UpdateUseCase(userRepository, passwordHasher, courtRepository);
 const deleteUseCase = new DeleteUseCase(userRepository);
 const getAllUseCase = new GetAllUseCase(userRepository);
 const getByEmailUseCase = new GetByEmailUseCase(userRepository);

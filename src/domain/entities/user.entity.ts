@@ -1,3 +1,4 @@
+import type { Court } from "./court.entity.js";
 
 export enum UserRole {
     ADMIN = 'admin',
@@ -17,6 +18,7 @@ export class User {
         public role: UserRole,
         public profilePicture: string,
         public isPremium: boolean,
-        public points: number
+        public points: number,
+        public favCourts: Court[]
     ) { }
 }
