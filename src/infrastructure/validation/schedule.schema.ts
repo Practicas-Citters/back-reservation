@@ -10,9 +10,9 @@ import { DayOfWeek } from "../../domain/entities/schedule.entity.js";
  * - Times follow the HH:mm format (24h).
  */
 export const ScheduleSchema = z.object({
-  courtId: z.string().uuid({ message: "Court ID must be a valid UUID" }),
+  courtId: z.uuid({ message: "Court ID must be a valid UUID" }),
   
-  dayOfWeek: z.nativeEnum(DayOfWeek, {
+  dayOfWeek: z.enum(DayOfWeek, {
     message: "Invalid day of the week"
   }),
   

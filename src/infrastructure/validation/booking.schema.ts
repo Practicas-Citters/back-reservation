@@ -11,8 +11,8 @@ import { BookingStatus } from "../../domain/entities/booking.entity.js";
  * - Numbers are positive and integers where appropriate.
  */
 export const BookingSchema = z.object({
-    userId: z.string().uuid({ message: "User ID must be a valid UUID" }),
-    courtId: z.string().uuid({ message: "Court ID must be a valid UUID" }),
+    userId: z.uuid({ message: "User ID must be a valid UUID" }),
+    courtId: z.uuid({ message: "Court ID must be a valid UUID" }),
 
     // Robust validation: REGEX format + Logical validation (months, real days, leap years)
     date: z.string()
@@ -68,7 +68,7 @@ export const BookingSchema = z.object({
     totalPrice: z.number()
         .min(0, "Total price cannot be negative"),
 
-    status: z.nativeEnum(BookingStatus, {
+    status: z.enum(BookingStatus, {
         message: "Invalid booking status"
     }).optional(),
 

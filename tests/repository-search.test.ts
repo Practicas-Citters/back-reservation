@@ -22,7 +22,7 @@ async function testSport(repo: InMemorySportRepository) {
 
 async function testUser(repo: InMemoryUserRepository) {
     console.log('\n--- Testing User ---');
-    const user = new User('1', 'Full Name', 'JohnDoe', 'john@example.com', 'pass', '123', '2000-01-01', UserRole.CLIENT, '', false, 0);
+    const user = new User('1', 'Full Name', 'JohnDoe', 'john@example.com', 'pass', '123', '2000-01-01', UserRole.CLIENT, '', false, 0, []);
     await repo.create(user);
 
     console.log('Email "JOHN@EXAMPLE.COM":', (await repo.getByEmail('JOHN@EXAMPLE.COM')) ? 'PASSED' : 'FAILED');

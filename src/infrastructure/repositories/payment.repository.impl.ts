@@ -264,7 +264,8 @@ export class PaymentRepositoryImpl implements PaymentRepository {
             bookingModel.user.role,
             bookingModel.user.profilePicture || '',
             bookingModel.user.isPremium,
-            bookingModel.user.points
+            bookingModel.user.points,
+            []
         );
 
         const booking = new Booking(

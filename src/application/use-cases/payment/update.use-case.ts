@@ -3,8 +3,8 @@ import { PaymentStatus, Payment } from "../../../domain/entities/payment.entity.
 
 interface UpdatePaymentInput {
     id: string;
-    status?: PaymentStatus;
-    transactionId?: string;
+    status?: PaymentStatus | undefined;
+    transactionId?: string | null | undefined;
 }
 
 // Use case to update payment status and transaction information
