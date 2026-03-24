@@ -89,4 +89,12 @@ export class UserModel extends Model {
     allowNull: false
   })
   declare points: number;
+
+  // favCourtsIds -> ids of the favorite courts
+  @Default([])
+  @Column({
+    type: DataType.ARRAY(DataType.UUID),
+    allowNull: false
+  })
+  declare favCourtsIds: string[];
 }

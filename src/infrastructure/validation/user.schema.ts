@@ -49,7 +49,8 @@ export const UserSchema = z.object({
   role: z.nativeEnum(UserRole, { message: "Invalid user role" }).optional(),
   profilePicture: z.string().url("Invalid URL for profile picture").optional().nullable(),
   isPremium: z.boolean().optional(),
-  points: z.number().int().min(0, "Points cannot be negative").optional()
+  points: z.number().int().min(0, "Points cannot be negative").optional(),
+  favCourtsIds: z.array(z.string().uuid(), { message: "Invalid court ID format" }).default([])
 });
 
 export type UserInput = z.infer<typeof UserSchema>;

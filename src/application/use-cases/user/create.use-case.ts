@@ -1,6 +1,8 @@
 
 import { User, UserRole } from "../../../domain/entities/user.entity.js";
 import type { UserRepository } from "../../../domain/repositories/user.domain.repository.js";
+import type { CourtRepository } from "../../../domain/repositories/court.domain.repository.js";
+
 // Define a port for the encryption service (Hexagonal: outgoing port)
 // This allows the actual implementation (bcrypt, argon2) to be in infrastructure.
 export interface PasswordHasher {
@@ -20,6 +22,7 @@ export interface CreateInput {
     phone: string;
     birthDate: string;
     isManager: boolean;
+    favCourtsIds?: string[];
     // isPremium, points are initialized by default
 }
 
@@ -28,6 +31,7 @@ export class CreateUseCase {
         private readonly userRepository: UserRepository,
         private readonly passwordHasher: PasswordHasher,
         private readonly idGenerator: IdGenerator,
+        private readonly courtRepository: CourtRepository,
     ) { }
 
 
@@ -46,7 +50,13 @@ export class CreateUseCase {
         // 2. Hash the password
         const hashedPassword = await this.passwordHasher.hash(input.password);
 
-        // 3. Generate ID and create User entity
+        // 3. Fetch favorite courts
+        const favCourts = await Promise.all(
+            (input.favCourtsIds || []).map(id => this.courtRepository.getById(id))
+        );
+        const validFavCourts = favCourts.filter(c => c !== null) as any[];
+
+        // 4. Generate ID and create User entity
         // Default values: role=CLIENT, profilePicture='', isPremium=false, points=0
         const newUser = new User(
             this.idGenerator.generate(),
@@ -59,10 +69,11 @@ export class CreateUseCase {
             input.isManager ? UserRole.MANAGER : UserRole.CLIENT,
             '', // profilePicture empty by default or default url
             false,
-            0
+            0,
+            validFavCourts
         );
 
-        // 4. Save in repository
+        // 5. Save in repository
         return this.userRepository.create(newUser);
     }
 }

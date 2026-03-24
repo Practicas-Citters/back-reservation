@@ -1,6 +1,7 @@
 import type { UserRepository } from "../../../domain/repositories/user.domain.repository.js";
 import { User, UserRole } from "../../../domain/entities/user.entity.js";
 import type { PasswordHasher } from "./create.use-case.js";
+import type { CourtRepository } from "../../../domain/repositories/court.domain.repository.js";
 
 // Define a port for the encryption service (Hexagonal: output port)
 export interface UpdateUserInput {
@@ -14,20 +15,22 @@ export interface UpdateUserInput {
     isPremium?: boolean;
     profilePicture?: string;
     points?: number;
+    favCourtsIds?: string[];
 }
 
 export class UpdateUseCase {
     constructor(
         private readonly userRepository: UserRepository,
-        private readonly passwordHasher: PasswordHasher
+        private readonly passwordHasher: PasswordHasher,
+        private readonly courtRepository: CourtRepository
     ) { };
 
     /**
-     * Executes the update of a sport.
-     * @param id - The ID of the sport to update.
+     * Executes the update of a user.
+     * @param id - The ID of the user to update.
      * @param input - The data to update.
-     * @returns The updated Sport entity.
-     * @throws Error if the sport is not found.
+     * @returns The updated User entity.
+     * @throws Error if the user is not found.
      */
 
     async execute(id: string, input: UpdateUserInput): Promise<User> {
@@ -53,13 +56,9 @@ export class UpdateUseCase {
             user.email = input.email;
             hasChanged = true;
         }
-        
+
         // 4. Handle password hashing if a new password is provided
         if (input.password !== undefined) {
-            // We hash the password using the injected PasswordHasher service.
-            // Since we can't easily compare the plain text input with the existing hash 
-            // without re-hashing or using a comparison tool, we assume any provided password 
-            // intended to be an update.
             user.password = await this.passwordHasher.hash(input.password);
             hasChanged = true;
         }
@@ -92,7 +91,16 @@ export class UpdateUseCase {
             hasChanged = true;
         }
 
-        // 6. Only perform the repository update if something actually changed
+        // 6. Update favorite courts if provided
+        if (input.favCourtsIds !== undefined) {
+            const favCourts = await Promise.all(
+                input.favCourtsIds.map(courtId => this.courtRepository.getById(courtId))
+            );
+            user.favCourts = favCourts.filter((c): c is any => c !== null);
+            hasChanged = true;
+        }
+
+        // 7. Only perform the repository update if something actually changed
         if (!hasChanged) {
             console.log(`No changes detected for user ${id}, skipping database update.`);
             return user;

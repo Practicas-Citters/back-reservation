@@ -10,7 +10,6 @@ import { UserRepositoryImpl } from './repositories/user.repository.impl.js';
 import { OrganizationRepositoryImpl } from './repositories/organization.repository.impl.js';
 
 // Singleton instances
-export const userRepository = new UserRepositoryImpl();
 export const bookingRepository = new BookingRepositoryImpl();
 export const paymentRepository = new PaymentRepositoryImpl();
 export const scheduleRepository = new ScheduleRepositoryImpl();
@@ -19,3 +18,4 @@ export const idGenerator = new UuidIdGenerator();
 export const courtRepository = new CourtRepositoryImpl();
 export const sportRepository = new SportRepositoryImpl();
 export const organizationRepository = new OrganizationRepositoryImpl();
+export const userRepository = new UserRepositoryImpl(courtRepository);
