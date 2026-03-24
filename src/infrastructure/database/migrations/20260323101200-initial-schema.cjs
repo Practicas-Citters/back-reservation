@@ -48,9 +48,9 @@ module.exports = {
           allowNull: false
         },
         role: {
-          type: Sequelize.ENUM('superadmin', 'admin', 'usuario'),
+          type: Sequelize.ENUM('admin', 'client', 'manager'),
           allowNull: false,
-          defaultValue: 'usuario'
+          defaultValue: 'client'
         },
         profilePicture: {
           type: Sequelize.STRING,
@@ -65,6 +65,11 @@ module.exports = {
           type: Sequelize.INTEGER,
           allowNull: false,
           defaultValue: 0
+        },
+        favCourtsIds: {
+          type: Sequelize.ARRAY(Sequelize.UUID),
+          allowNull: false,
+          defaultValue: []
         },
         createdAt: {
           allowNull: false,
@@ -230,11 +235,11 @@ module.exports = {
           onUpdate: 'CASCADE',
           onDelete: 'RESTRICT'
         },
-        userId: {
+        organizationId: {
           type: Sequelize.UUID,
-          allowNull: false,
+          allowNull: true,
           references: {
-            model: 'users',
+            model: 'organizations',
             key: 'id'
           },
           onUpdate: 'CASCADE',
