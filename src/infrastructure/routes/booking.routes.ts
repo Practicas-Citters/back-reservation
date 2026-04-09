@@ -13,6 +13,7 @@ import { GetBookingsByEndTimeUseCase } from "../../application/use-cases/booking
 import { GetBookingsByTotalPriceUseCase } from "../../application/use-cases/booking/get-by-total-price.use-case.js";
 import { GetBookingsByStatusUseCase } from "../../application/use-cases/booking/get-by-status.use-case.js";
 import { GetBookingsByUserAndDateUseCase } from "../../application/use-cases/booking/get-by-user-and-date.use-case.js";
+import { GetBookingsByCourtUseCase } from "../../application/use-cases/booking/get-by-court.use-case.js";
 import { CheckAvailabilityUseCase } from "../../application/use-cases/booking/check-availability.use-case.js";
 import { UpdateBookingUseCase } from "../../application/use-cases/booking/update.use-case.js";
 import { DeleteBookingUseCase } from "../../application/use-cases/booking/delete.use-case.js";
@@ -33,6 +34,7 @@ const getBookingsByEndTimeUseCase = new GetBookingsByEndTimeUseCase(bookingRepos
 const getBookingsByTotalPriceUseCase = new GetBookingsByTotalPriceUseCase(bookingRepository);
 const getBookingsByStatusUseCase = new GetBookingsByStatusUseCase(bookingRepository);
 const getBookingsByUserAndDateUseCase = new GetBookingsByUserAndDateUseCase(bookingRepository);
+const getBookingsByCourtUseCase = new GetBookingsByCourtUseCase(bookingRepository);
 const checkAvailabilityUseCase = new CheckAvailabilityUseCase(bookingRepository);
 const updateBookingUseCase = new UpdateBookingUseCase(bookingRepository);
 const deleteBookingUseCase = new DeleteBookingUseCase(bookingRepository);
@@ -48,6 +50,7 @@ const controller = new BookingController(
     getBookingsByTotalPriceUseCase,
     getBookingsByStatusUseCase,
     getBookingsByUserAndDateUseCase,
+    getBookingsByCourtUseCase,
     checkAvailabilityUseCase,
     updateBookingUseCase,
     deleteBookingUseCase
@@ -66,6 +69,7 @@ router.get('/search/end-time/:endTime', controller.getByEndTime);
 router.get('/search/total-price/:totalPrice', controller.getByTotalPrice);
 router.get('/search/status/:status', controller.getByStatus);
 router.get('/search/user/:userId/date/:date', controller.getByUserAndDate);
+router.get('/search/court/:courtId', controller.getByCourt);
 
 // Utility
 router.post('/check-availability', controller.checkAvailability);

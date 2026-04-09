@@ -10,6 +10,7 @@ import { GetBookingsByEndTimeUseCase } from '../../application/use-cases/booking
 import { GetBookingsByTotalPriceUseCase } from '../../application/use-cases/booking/get-by-total-price.use-case.js';
 import { GetBookingsByStatusUseCase } from '../../application/use-cases/booking/get-by-status.use-case.js';
 import { GetBookingsByUserAndDateUseCase } from '../../application/use-cases/booking/get-by-user-and-date.use-case.js';
+import { GetBookingsByCourtUseCase } from '../../application/use-cases/booking/get-by-court.use-case.js';
 import { CheckAvailabilityUseCase } from '../../application/use-cases/booking/check-availability.use-case.js';
 import { UpdateBookingUseCase } from '../../application/use-cases/booking/update.use-case.js';
 import { DeleteBookingUseCase } from '../../application/use-cases/booking/delete.use-case.js';
@@ -27,6 +28,7 @@ export class BookingController {
         private readonly getBookingsByTotalPriceUseCase: GetBookingsByTotalPriceUseCase,
         private readonly getBookingsByStatusUseCase: GetBookingsByStatusUseCase,
         private readonly getBookingsByUserAndDateUseCase: GetBookingsByUserAndDateUseCase,
+        private readonly getBookingsByCourtUseCase: GetBookingsByCourtUseCase,
         private readonly checkAvailabilityUseCase: CheckAvailabilityUseCase,
         private readonly updateBookingUseCase: UpdateBookingUseCase,
         private readonly deleteBookingUseCase: DeleteBookingUseCase,
@@ -41,6 +43,7 @@ export class BookingController {
         this.getByTotalPrice = this.getByTotalPrice.bind(this);
         this.getByStatus = this.getByStatus.bind(this);
         this.getByUserAndDate = this.getByUserAndDate.bind(this);
+        this.getByCourt = this.getByCourt.bind(this);
         this.checkAvailability = this.checkAvailability.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
@@ -204,6 +207,21 @@ export class BookingController {
                 return;
             }
             const bookings = await this.getBookingsByUserAndDateUseCase.execute({ userId, date });
+            res.status(200).json(bookings);
+        } catch (error: any) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
+        }
+    }
+
+    async getByCourt(req: Request, res: Response) {
+        try {
+            const { courtId } = req.params;
+            if (!courtId || typeof courtId !== 'string') {
+                res.status(400).json({ error: 'Invalid Court ID' });
+                return;
+            }
+            const bookings = await this.getBookingsByCourtUseCase.execute({ courtId });
             res.status(200).json(bookings);
         } catch (error: any) {
             console.error(error);

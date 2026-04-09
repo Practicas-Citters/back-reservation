@@ -107,7 +107,7 @@ export class BookingRepositoryImpl implements BookingRepository {
                     as: 'court',
                     include: [
                         { model: SportModel, as: 'sport' },
-                        { model: UserModel, as: 'user' }
+                        { model: OrganizationModel, as: 'organization' }
                     ]
                 }
             ]
@@ -127,7 +127,7 @@ export class BookingRepositoryImpl implements BookingRepository {
                     as: 'court',
                     include: [
                         { model: SportModel, as: 'sport' },
-                        { model: UserModel, as: 'user' }
+                        { model: OrganizationModel, as: 'organization' }
                     ]
                 }
             ]
@@ -147,7 +147,7 @@ export class BookingRepositoryImpl implements BookingRepository {
                     as: 'court',
                     include: [
                         { model: SportModel, as: 'sport' },
-                        { model: UserModel, as: 'user' }
+                        { model: OrganizationModel, as: 'organization' }
                     ]
                 }
             ]
@@ -167,7 +167,7 @@ export class BookingRepositoryImpl implements BookingRepository {
                     as: 'court',
                     include: [
                         { model: SportModel, as: 'sport' },
-                        { model: UserModel, as: 'user' }
+                        { model: OrganizationModel, as: 'organization' }
                     ]
                 }
             ]
@@ -187,7 +187,7 @@ export class BookingRepositoryImpl implements BookingRepository {
                     as: 'court',
                     include: [
                         { model: SportModel, as: 'sport' },
-                        { model: UserModel, as: 'user' }
+                        { model: OrganizationModel, as: 'organization' }
                     ]
                 }
             ]
@@ -207,7 +207,7 @@ export class BookingRepositoryImpl implements BookingRepository {
                     as: 'court',
                     include: [
                         { model: SportModel, as: 'sport' },
-                        { model: UserModel, as: 'user' }
+                        { model: OrganizationModel, as: 'organization' }
                     ]
                 }
             ]
@@ -227,7 +227,7 @@ export class BookingRepositoryImpl implements BookingRepository {
                     as: 'court',
                     include: [
                         { model: SportModel, as: 'sport' },
-                        { model: UserModel, as: 'user' }
+                        { model: OrganizationModel, as: 'organization' }
                     ]
                 }
             ]
@@ -247,7 +247,7 @@ export class BookingRepositoryImpl implements BookingRepository {
                     as: 'court',
                     include: [
                         { model: SportModel, as: 'sport' },
-                        { model: UserModel, as: 'user' }
+                        { model: OrganizationModel, as: 'organization' }
                     ]
                 }
             ]
@@ -267,7 +267,7 @@ export class BookingRepositoryImpl implements BookingRepository {
                     as: 'court',
                     include: [
                         { model: SportModel, as: 'sport' },
-                        { model: UserModel, as: 'user' }
+                        { model: OrganizationModel, as: 'organization' }
                     ]
                 }
             ]
