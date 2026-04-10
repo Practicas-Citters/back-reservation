@@ -47,9 +47,9 @@ export class UserController {
             const validation = UserSchema.safeParse(req.body);
 
             if (!validation.success) {
-                return res.status(400).json({ 
-                    error: "Validation failed", 
-                    details: validation.error.issues 
+                return res.status(400).json({
+                    error: "Validation failed",
+                    details: validation.error.issues
                 });
             }
 
@@ -76,9 +76,9 @@ export class UserController {
             const validation = UserSchema.partial().safeParse(req.body);
 
             if (!validation.success) {
-                return res.status(400).json({ 
-                    error: "Validation failed", 
-                    details: validation.error.issues 
+                return res.status(400).json({
+                    error: "Validation failed",
+                    details: validation.error.issues
                 });
             }
 

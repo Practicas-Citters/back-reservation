@@ -7,6 +7,7 @@ const app = express();
 // HTTP Verbs
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 import { userRouter } from './src/infrastructure/routes/user.routes.js';
 import { bookingRouter } from './src/infrastructure/routes/booking.routes.js';
