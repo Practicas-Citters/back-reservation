@@ -9,7 +9,9 @@ import { GetByIdUseCase } from '../../application/use-cases/user/get-by-id.use-c
 import { GetByPremiumStatusUseCase } from '../../application/use-cases/user/get-by-premium-status.use-case.js';
 import { GetByRoleUseCase } from '../../application/use-cases/user/get-by-role.use-case.js';
 import { GetByUsernameUseCase } from '../../application/use-cases/user/get-by-username.use-case.js';
+import { LoginUseCase } from '../../application/use-cases/user/login.use-case.js';
 import { UserSchema } from '../../infrastructure/validation/user.schema.js';
+import { LoginSchema } from '../../infrastructure/validation/login.schema.js';
 
 export class UserController {
     constructor(
@@ -21,7 +23,8 @@ export class UserController {
         private getByIdUseCase: GetByIdUseCase,
         private getByPremiumStatusUseCase: GetByPremiumStatusUseCase,
         private getByRoleUseCase: GetByRoleUseCase,
-        private getByUsernameUseCase: GetByUsernameUseCase
+        private getByUsernameUseCase: GetByUsernameUseCase,
+        private loginUseCase: LoginUseCase
     ) {
         this.create = this.create.bind(this);
         this.update = this.update.bind(this);
@@ -32,6 +35,7 @@ export class UserController {
         this.getByPremiumStatus = this.getByPremiumStatus.bind(this);
         this.getByRole = this.getByRole.bind(this);
         this.getByUsername = this.getByUsername.bind(this);
+        this.login = this.login.bind(this);
     }
 
     /**
@@ -45,7 +49,7 @@ export class UserController {
             if (!validation.success) {
                 return res.status(400).json({ 
                     error: "Validation failed", 
-                    details: validation.error.flatten().fieldErrors 
+                    details: validation.error.issues 
                 });
             }
 
@@ -74,7 +78,7 @@ export class UserController {
             if (!validation.success) {
                 return res.status(400).json({ 
                     error: "Validation failed", 
-                    details: validation.error.flatten().fieldErrors 
+                    details: validation.error.issues 
                 });
             }
 
@@ -248,5 +252,39 @@ export class UserController {
         }
     }
 
+    /**
+     * Login a user with email and password.
+     * Returns user data without password on success.
+     * TODO: Add JWT token generation.
+     */
+    async login(req: Request, res: Response) {
+        try {
+            const validation = LoginSchema.safeParse(req.body);
+
+            if (!validation.success) {
+                return res.status(400).json({
+                    error: "Validation failed",
+                    details: validation.error.issues
+                });
+            }
+
+            const user = await this.loginUseCase.execute(validation.data);
+
+            // Remove password from response
+            const { password, ...userWithoutPassword } = user;
+
+            res.status(200).json({
+                message: 'Login successful',
+                user: userWithoutPassword
+                // token: TODO - Add JWT token here
+            });
+        } catch (error: any) {
+            if (error.message === 'Invalid email or password') {
+                return res.status(401).json({ error: error.message });
+            }
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error: ' + error.message });
+        }
+    }
 
 }

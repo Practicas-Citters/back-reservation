@@ -9,6 +9,7 @@ import { GetByRoleUseCase } from '../../application/use-cases/user/get-by-role.u
 import { GetByUsernameUseCase } from '../../application/use-cases/user/get-by-username.use-case.js';
 import { UpdateUseCase } from '../../application/use-cases/user/update.use-case.js';
 import { DeleteUseCase } from '../../application/use-cases/user/delete.use-case.js';
+import { LoginUseCase } from '../../application/use-cases/user/login.use-case.js';
 import { userRepository, passwordHasher, idGenerator, courtRepository } from '../container.js';
 
 const router = Router();
@@ -23,15 +24,17 @@ const getByIdUseCase = new GetByIdUseCase(userRepository);
 const getByPremiumStatusUseCase = new GetByPremiumStatusUseCase(userRepository);
 const getByRoleUseCase = new GetByRoleUseCase(userRepository);
 const getByUsernameUseCase = new GetByUsernameUseCase(userRepository);
+const loginUseCase = new LoginUseCase(userRepository, passwordHasher);
 
 
 
 const userController = new UserController(createUseCase,
     updateUseCase, deleteUseCase, getAllUseCase,
     getByEmailUseCase, getByIdUseCase, getByPremiumStatusUseCase,
-    getByRoleUseCase, getByUsernameUseCase);
+    getByRoleUseCase, getByUsernameUseCase, loginUseCase);
 
 router.post('/', userController.create);
+router.post('/login', userController.login);
 router.get('/', userController.getAll);
 router.get('/search/id/:id', userController.getById);
 router.get('/search/email/:email', userController.getByEmail);
@@ -42,3 +45,4 @@ router.patch('/:id', userController.update);
 router.delete('/:id', userController.delete);
 
 export { router as userRouter };
+
