@@ -44,7 +44,7 @@ export class CourtController {
             if (!validation.success) {
                 return res.status(400).json({ 
                     error: "Validation failed", 
-                    details: validation.error.flatten().fieldErrors 
+                    details: validation.error.issues 
                 });
             }
 
@@ -193,7 +193,7 @@ export class CourtController {
             if (!validation.success) {
                 return res.status(400).json({ 
                     error: "Validation failed", 
-                    details: validation.error.flatten().fieldErrors 
+                    details: validation.error.issues 
                 });
             }
 
